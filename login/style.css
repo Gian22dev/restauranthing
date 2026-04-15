@@ -85,8 +85,6 @@ body {
 
 .form__checkbox {
     width: 300px;
-    box-sizing: border-box;
-    border: 2px solid green;
     display: flex;
     align-items: center;
     gap: 8px;

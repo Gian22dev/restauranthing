@@ -1,0 +1,169 @@
+:root{
+    --primary: #DD4A2C;
+    --text: #1E1E1E;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Fondo general (igual que login) */
+body {
+  background: #F6DDBE;
+  height: 100vh;
+}
+
+/* Layout */
+.container {
+  display: flex;
+  height: 100%;
+  padding: 24px;
+  gap: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+    box-sizing: border-box;
+    border: 1px solid black;
+    width: 240px;
+    background: #DD4A2C;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Usuario */
+.user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  background: white;
+  border-radius: 50%;
+}
+
+/* Navegación */
+nav {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+nav button {
+    height: 40px;
+    width: 100%;
+    padding: 12px 14px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    color: var(--text);
+    transition: 0.2s;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+}
+
+nav .active {
+    background: white;
+    color: var(--text);
+    font-weight: 500;
+    border: 1px solid black;
+}
+
+nav .inactive{
+    color: white;
+    background-color: #bd371d;
+}
+
+nav button.inactive:hover {
+  border: 1px solid black;
+}
+
+/* Contenido */
+.content {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  box-sizing: border-box;
+  border: 1px solid black;
+}
+
+.content h1 {
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+/* Grid */
+.tables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+/* Mesa */
+.table {
+    background: #f3e7dc;
+    border-radius: 14px;
+    padding: 30px;
+    text-align: center;
+    transition: 0.2s;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+}
+
+/* Icono */
+.table .icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.table.active .icon{
+    filter: brightness(2);
+}
+
+/* Texto */
+.table p {
+  font-size: 15px;
+  color: var(--text);
+}
+
+/* Activa */
+.table.active{
+    background: #e36d3a;
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+.table.active p{
+    color: white;
+    font-weight: 500;
+}
+
+/* Hover elegante */
+.table.active:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+/* Inactiva */
+.table.inactive {
+  color: #b7b7b7;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
