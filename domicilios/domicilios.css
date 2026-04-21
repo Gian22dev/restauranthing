@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -7,9 +9,21 @@
 
 :root {
   --primary: #E94E2E;
+  --primary-hover: #cf3f23;
+  --primary-soft: #FAD9D0;
   --bg: #f7debf;
+  --card: #ffffff;
   --text: #1E1E1E;
+  --text-soft: #4A4A4A;
+  --text-muted: #8A8478;
   --gray: #D9D9D9;
+  --border: #252525;
+  --shadow-sm: 0 1px 2px rgba(60, 40, 20, .04);
+  --shadow-md: 0 8px 24px -12px rgba(60, 40, 20, .15);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.05);
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 20px;
 }
 
 body {
@@ -38,9 +52,9 @@ body {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   margin: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-lg);
 }
 
 .brand {
@@ -83,11 +97,13 @@ nav {
 
 nav a {
   padding: 12px 15px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   cursor: pointer;
   opacity: .8;
   font-weight: 500;
   transition: all 0.2s;
+  text-decoration: none;
+  color: white;
 }
 
 nav a:hover {
@@ -96,10 +112,11 @@ nav a:hover {
 }
 
 nav a.active {
-  background: white;
+  background: var(--card);
   color: var(--primary);
   opacity: 1;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  font-weight: 600;
 }
 
 .logout {
@@ -109,7 +126,7 @@ nav a.active {
   color: white;
   cursor: pointer;
   padding: 12px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   font-weight: 500;
   transition: background 0.2s;
 }
@@ -129,10 +146,10 @@ nav a.active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  background: var(--card);
   padding: 25px 30px;
-  border-radius: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 .header > div {
@@ -142,7 +159,7 @@ nav a.active {
 }
 
 .breadcrumb {
-  color: #c47b6a;
+  color: var(--primary);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 1px;
@@ -150,11 +167,12 @@ nav a.active {
 
 h1 {
   font-size: 28px;
-  color: #333;
+  color: var(--text);
+  font-weight: 700;
 }
 
 .header p {
-  color: #888;
+  color: var(--text-soft);
   font-size: 14px;
 }
 
@@ -165,11 +183,11 @@ h1 {
 }
 
 .btn-language {
-  background: white;
+  background: var(--card);
   color: var(--primary);
   border: 2px solid var(--primary);
   padding: 12px 18px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-weight: 700;
   font-size: 13px;
@@ -178,15 +196,15 @@ h1 {
 
 .btn-language:hover {
   background: var(--primary);
-  color: white;
+  color: var(--card);
 }
 
 .btn-primary {
   background: var(--primary);
-  color: white;
+  color: var(--card);
   border: none;
   padding: 14px 24px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-weight: 600;
   font-size: 14px;
@@ -194,7 +212,7 @@ h1 {
 }
 
 .btn-primary:hover {
-  filter: brightness(0.95);
+  background: var(--primary-hover);
 }
 
 /* STATS */
@@ -206,10 +224,10 @@ h1 {
 
 .stat {
   flex: 1;
-  background: white;
+  background: var(--card);
   padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   transition: transform 0.2s;
 }
 
@@ -231,7 +249,7 @@ h1 {
 
 .stat span {
   font-size: 12px;
-  color: #777;
+  color: var(--text-muted);
   font-weight: 600;
   letter-spacing: 1px;
 }
@@ -239,7 +257,8 @@ h1 {
 .stat h2 {
   font-size: 32px;
   margin-top: 5px;
-  color: #333;
+  color: var(--text);
+  font-weight: 700;
 }
 
 /* FILTERS */
@@ -248,16 +267,16 @@ h1 {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  background: white;
+  background: var(--card);
   padding: 15px 20px;
-  border-radius: 15px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 .filters input {
   padding: 12px 15px;
-  border-radius: 10px;
-  border: 1px solid #eee;
+  border-radius: var(--radius);
+  border: 1px solid var(--gray);
   width: 300px;
   font-size: 14px;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -266,7 +285,7 @@ h1 {
 .filters input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(228, 87, 46, 0.1);
+  box-shadow: 0 0 0 3px rgba(233, 78, 46, 0.12);
 }
 
 .tabs {
@@ -277,22 +296,23 @@ h1 {
 .tabs button {
   padding: 10px 18px;
   border: none;
-  border-radius: 25px;
-  background: #f5f5f5;
+  border-radius: var(--radius-xl);
+  background: var(--bg);
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  color: #666;
+  color: var(--text-soft);
   transition: all 0.2s;
 }
 
 .tabs button:hover {
-  background: #eee;
+  background: var(--gray);
 }
 
 .tabs .active {
   background: var(--primary);
-  color: white;
+  color: var(--card);
+  font-weight: 600;
 }
 
 /* CARDS */
@@ -303,10 +323,10 @@ h1 {
 }
 
 .card {
-  background: #fff;
-  border-radius: 15px;
+  background: var(--card);
+  border-radius: var(--radius-lg);
   padding: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-md);
 }
 
 .card .top {
@@ -399,7 +419,7 @@ h1 {
 
 .card-id {
   font-size: 11px;
-  color: #999;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -409,13 +429,14 @@ h1 {
 
 .card-client strong {
   font-size: 16px;
-  color: #333;
+  color: var(--text);
+  font-weight: 700;
 }
 
 .card-details {
-  background: #f9f9f9;
+  background: var(--bg);
   padding: 10px;
-  border-radius: 10px;
+  border-radius: var(--radius);
   margin-bottom: 10px;
 }
 
@@ -424,7 +445,7 @@ h1 {
 .card .telefono,
 .card .hora {
   font-size: 13px;
-  color: #666;
+  color: var(--text-soft);
   margin: 4px 0;
 }
 
@@ -436,21 +457,22 @@ h1 {
 }
 
 .card .item-tag {
-  background: #f5f5f5;
+  background: var(--bg);
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 11px;
-  color: #555;
+  color: var(--text-soft);
 }
 
 .card .item-tag.more {
   background: var(--primary);
-  color: white;
+  color: var(--card);
 }
 
 .card .total {
   color: var(--primary);
   font-size: 16px;
+  font-weight: 700;
 }
 
 /* CARD ACTIONS */
