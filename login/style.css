@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+:root {
+    --primary: #E94E2E;
+    --bg: #f7debf;
+    --text: #1E1E1E;
+    --gray: #D9D9D9;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ================= LAYOUT ================= */
+
+.login__card {
+    width: 100%;
+    max-width: 1100px;
+    background: #ffffff;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 40px;
+
+    display: flex;
+    /* 🔥 CAMBIO CLAVE */
+    position: relative;
+    overflow: hidden;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= SECCIONES ================= */
+
+.login__info,
+.login__visual,
+.register__info {
+    width: 50%;
+    transition: all 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ================= INFO ================= */
+
+.login__chinese {
+    color: var(--primary);
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.register__chinese {
+    color: var(--primary);
+    font-size: 25px;
+    font-weight: 600;
+}
+
+
+.login__title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 35px;
+}
+
+.login__text {
+    font-size: 0.910rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    color: hsl(0 0% 45%);
+    margin: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-family: 'Quicksand', sans-serif;
+}
+
+/* ================= FORM ================= */
+
+.form__group {
+    margin-bottom: 15px;
+}
+
+.form input {
+    width: 100%;
+    height: 45px;
+    padding: 12px;
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.form input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* ================= BOTONES ================= */
+
+.botones {
+    display: flex;
+    gap: 3px;
+    margin-top: 30px;
+    height: 50px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px 0px 0px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+.btn-primary:hover {
+    filter: brightness(0.95);
+}
+
+
+.btn-secondary {
+    width: 100%;
+    padding: 16px;
+    color: var(--primary);
+    background: transparent;
+    border: 1px solid var(--primary);
+    border-radius: 0px 10px 10px 0px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-thirdy {
+    width: 100%;
+    height: 53px;
+    margin-top: 5px;
+    padding: 16px;
+    color: var(--primary);
+    background: transparent;
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-thirdy:hover {
+    background: var(--primary);
+    color: white;
+    border: none;
+}
+
+/* ================= VISUAL ================= */
+
+.login__visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login__image {
+    width: 100%;
+    max-width: 350px;
+    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.login__logo {
+    position: absolute;
+    bottom: -20px;
+    right: 20px;
+    width: 120px;
+}
+
+/* ================= REGISTRO ================= */
+
+.register__info {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    height: 430px;
+    padding: 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+/* ================= ESTADO INICIAL ================= */
+
+.login__info {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.login__visual {
+    transform: translateX(0);
+}
+
+/* ================= ESTADO ACTIVO ================= */
+
+.login__card.active .login__info {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.login__card.active .login__visual {
+    transform: translateX(-120%);
+}
+
+.login__card.active .register__info {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.login__card.active .login__image {
+    transform: rotate(-180deg) scale(0.9);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+    .login__card {
+        flex-direction: column;
+    }
+
+    .login__info,
+    .login__visual,
+    .register__info {
+        width: 100%;
+    }
+
+    .register__info {
+        position: relative;
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .login__logo {
+        position: static;
+        margin-top: 20px;
+    }
+}
