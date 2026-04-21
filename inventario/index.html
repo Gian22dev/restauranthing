@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventario</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div class="app">
+<aside class="sidebar">
+
+  <div class="user">
+    <div class="avatar"></div>
+    <span>Mesero</span>
+  </div>
+
+  <nav>
+    <a href="../mesas/pedidos/mesas.pedidos.html">Mesas</a>
+    <a href="rapido.html">Rápido</a>
+    <a href="domicilios.html">Domicilios</a>
+    <a href="caja.html">Caja</a>
+    <a href="inventario.html" class="active">Inventario</a>
+    <a href="historial.html">Historial</a>
+  </nav>
+
+</aside>
+
+<main class="main">
+  <div class="container">
+
+    <div class="card">
+
+      <!-- HEADER -->
+      <div class="header">
+        <h1>Inventory</h1>
+
+        <input type="text" id="search" placeholder="Search..." onkeyup="filtrar()">
+
+        <div class="tabs">
+          <button onclick="cambiarSeccion('stock', this)" class="active">Stock</button>
+        <button onclick="cambiarSeccion('crear', this)">Add Product</button>
+        <button onclick="cambiarSeccion('mov', this)">Movimiento</button>
+        </div>
+      </div>
+
+      <!-- STOCK -->
+      <div id="stock" class="seccion active">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Tipo</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody id="tablaBody"></tbody>
+        </table>
+      </div>
+
+      <!-- CREAR -->
+      <div id="crear" class="seccion">
+        <input type="text" id="nombre" placeholder="Nombre">
+        <select id="tipo">
+          <option value="gramos">Gramos</option>
+          <option value="unidad">Unidad</option>
+        </select>
+        <input type="number" id="stockInput" placeholder="Stock">
+        <button class="btn-main" onclick="crearInsumo()">Crear</button>
+      </div>
+
+      <!-- MOVIMIENTO -->
+      <div id="mov" class="seccion">
+        <select id="insumoSelect"></select>
+        <input type="number" id="cantidadMov" placeholder="Cantidad">
+        <select id="tipoMov">
+          <option value="entrada">Entrada</option>
+          <option value="salida">Salida</option>
+          <option value="ajuste">Ajuste</option>
+        </select>
+        <button class="btn-main" onclick="registrarMovimiento()">Aplicar</button>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+</div>
+
+
+
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
