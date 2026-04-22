@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Menú</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="user">
+      <div class="avatar"></div>
+      <span id="user-role">Administrador</span>
+    </div>
+
+    <nav>
+      <button class="inactive" onclick="location.href='../mesas/mesas.html'">Mesas</button>
+      <button class="inactive">Rápido</button>
+      <button class="inactive">Domicilios</button>
+      <button class="inactive">Caja</button>
+      <button class="inactive">Inventario</button>
+      <button class="inactive">Historial</button>
+      <button class="active">Menú</button>
+    </nav>
+  </aside>
+
+  <!-- Contenido -->
+  <main class="content">
+    <div class="content-header">
+      <h1>Gestión de Menú</h1>
+
+      <div class="actions">
+        <select id="category-filter">
+          <option value="all">Todas las categorías</option>
+        </select>
+
+        <button id="add-product" class="action-btn">+ Producto</button>
+      </div>
+    </div>
+
+    <div class="menu-grid" id="menu-grid"></div>
+  </main>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay hidden" id="modal">
+  <div class="modal">
+    <h2 id="modal-title">Nuevo producto</h2>
+
+    <input type="text" id="name" placeholder="Nombre">
+    <input type="number" id="price" placeholder="Precio">
+    <input type="text" id="category" placeholder="Categoría">
+
+    <div class="modal-actions">
+      <button id="save" class="action-btn">Guardar</button>
+      <button id="close" class="action-btn secondary">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
