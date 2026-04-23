@@ -1,6 +1,9 @@
 :root{
-    --primary: #DD4A2C;
-    --text: #1E1E1E;
+    --primary: #E21B23;
+    --light: #eb2121;
+    --dark: #be171d;
+    --darker: #A31218;
+    --text: #2B2B2B;
 }
 
 /* Reset */
@@ -13,8 +16,9 @@
 
 /* Fondo general (igual que login) */
 body {
-  background: #F6DDBE;
+  background: white;
   height: 100vh;
+  width: 100vw;
 }
 
 /* Layout */
@@ -28,9 +32,9 @@ body {
 /* Sidebar */
 .sidebar {
     box-sizing: border-box;
-    border: 1px solid black;
+    border: 2px solid var(--darker);
     width: 240px;
-    background: #ff7a60;
+    background: var(--primary);
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.05);
@@ -53,9 +57,11 @@ body {
   border-radius: 50%;
 }
 
+aside span{
+  color: white;
+}
 /* Navegación */
 nav {
-    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -64,39 +70,36 @@ nav {
 nav button {
     height: 40px;
     width: 100%;
-    padding: 12px 14px;
+    padding: 0 14px;
     border: none;
     background: transparent;
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
     font-size: 14px;
-    color: var(--text);
+    color: white;
     transition: 0.2s;
     box-sizing: border-box;
     border: 1px solid transparent;
 }
 
 nav .active {
-    background: #f7debf;
-    color: var(--text);
+    background: var(--darker);
     font-weight: 500;
+    border: 1px solid black;
     
 }
 
 nav .inactive{
-    color: white;
-    background-color: #c24229bb;
+    background-color: transparent;
+    filter: opacity(0.5);
 }
 
-nav .active:hover{
-    color: rgb(0, 0, 0);
-  border: 1px solid black;
-    background-color: #f7debf;
-}
-
-nav button.inactive:hover {
-  border: 1px solid black;
+nav .inactive:hover {
+  background-color: var(--dark);
+  border: 1px solid var(--darker);
+  filter: none;
+  padding-left: 20px;
 }
 
 /* Contenido */
@@ -122,12 +125,23 @@ nav button.inactive:hover {
   gap: 16px;
   margin-bottom: 24px;
   flex-wrap: wrap;
+  box-sizing: border-box;
+  border: 1px solid purple;
+}
+
+#textChinese{
+    color: var(--primary);
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
 }
 
 .table-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  box-sizing: border-box;
+  border: 1px solid green;
 }
 
 .action-btn {
@@ -138,20 +152,20 @@ nav button.inactive:hover {
   padding: 10px 18px;
   font-size: 14px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition: 0.2s;
 }
 
 .action-btn.secondary {
-  background: #333;
+  background: #2B2B2B;
 }
 
 .action-btn:hover:not(:disabled) {
   transform: translateY(-1px);
-  background: #b83b24;
+  background: #C9151C;
 }
 
 .action-btn.secondary:hover:not(:disabled) {
-  background: #1f1f1f;
+  background: #2B2B2B;
 }
 
 .action-btn:disabled {
@@ -167,6 +181,8 @@ nav button.inactive:hover {
   place-items: center;
   padding: 20px;
   z-index: 20;
+  box-sizing: border-box;
+  border: 1px solid yellow;
 }
 
 .table-modal-overlay.hidden {
@@ -228,16 +244,16 @@ nav button.inactive:hover {
 }
 
 .modal-action-btn.secondary {
-  background: #333;
+  background: #2B2B2B;
 }
 
 .modal-action-btn:hover {
   transform: translateY(-1px);
-  background: #b83b24;
+  background: #C9151C;
 }
 
 .modal-action-btn.secondary:hover {
-  background: #1f1f1f;
+  background: #2B2B2B;
 }
 
 .bill-panel {
@@ -263,7 +279,7 @@ nav button.inactive:hover {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  background: #faf5f0;
+  background: #F2F2F2;
   padding: 14px 16px;
   border-radius: 12px;
   border: 1px solid rgba(0,0,0,0.05);
@@ -313,14 +329,14 @@ nav button.inactive:hover {
 
 /* Mesa */
 .table {
-    background: #f3e7dc;
+    background: #F2F2F2;
     border-radius: 14px;
     padding: 30px;
     text-align: center;
     transition: 0.2s;
     box-sizing: border-box;
     
-    border: 1px solid rgba(0, 0, 0, 0.541);
+    border: 1px solid #2B2B2B;
 }
 
 /* Icono */
@@ -341,7 +357,7 @@ nav button.inactive:hover {
 
 /* Activa */
 .table.active{
-    background: #e94d2ed8;
+    background: var(--primary);
     cursor: pointer;
     border: 1px solid black;
 }

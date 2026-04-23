@@ -146,9 +146,11 @@ if (tablesGrid) {
 }
 
 addButton.addEventListener('click', () => {
-  const nextNumber = tablesGrid.children.length + 1;
-  tablesGrid.appendChild(createTableCard(nextNumber));
-  updateRemoveState();
+  if(tablesGrid.children.length < 15){
+    const nextNumber = tablesGrid.children.length + 1;
+    tablesGrid.appendChild(createTableCard(nextNumber));
+    updateRemoveState();
+  }
 });
 
 removeButton.addEventListener('click', () => {
