@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historial · Sakura</title>
+    <link rel="stylesheet" href="historial.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Kanjis decorativos -->
+    <span
+      class="kanji-decorative"
+      style="
+        position: fixed;
+        top: 2rem;
+        left: 2rem;
+        font-size: 8rem;
+        line-height: 1;
+        display: block;
+        color: hsla(10, 80%, 55%, 0.08);
+        font-weight: 700;
+        user-select: none;
+        z-index: 0;
+      "
+      >歴</span
+    >
+
+    <span
+      class="kanji-decorative"
+      style="
+        position: fixed;
+        bottom: 3rem;
+        right: 3rem;
+        font-size: 6rem;
+        line-height: 1;
+        display: block;
+        color: hsla(10, 80%, 55%, 0.08);
+        font-weight: 700;
+        user-select: none;
+        z-index: 0;
+      "
+      >史</span
+    >
+
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="logo">麺</div>
+          <div>
+            <h3>SAKURA</h3>
+            <span>Mesero</span>
+          </div>
+        </div>
+        <nav>
+          <a href="../mesas/pedidos/mesas.pedidos.html" id="nav-mesas">Mesas</a>
+          <a href="../rapido/index.html" id="nav-rapido">Rápido</a>
+          <a href="../domicilios/domicilios.html" id="nav-domicilios"
+            >Domicilios</a
+          >
+          <a href="../caja.html" id="nav-caja">Caja</a>
+          <a href="../inventario/index.html" id="nav-inventario">Inventario</a>
+          <a class="active" id="nav-historial">Historial</a>
+        </nav>
+        <button class="logout" onclick="location.href = '../login/index.html'">
+          Cerrar sesión
+        </button>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="content">
+        <!-- HEADER -->
+        <header class="header">
+          <div>
+            <span class="breadcrumb" id="breadcrumb">履歴 · HISTORIAL</span>
+            <h1 id="pageTitle">Historial</h1>
+            <p id="pageSubtitle">Consulta ventas, mesas y turnos por fecha</p>
+          </div>
+        </header>
+
+        <!-- STATS -->
+        <section class="stats">
+          <div class="stat ventas">
+            <span id="statVentas">VENTAS HOY</span>
+            <h2 id="statVentasVal">$0</h2>
+            <small id="statVentasSub">del turno actual</small>
+          </div>
+          <div class="stat mesas">
+            <span id="statMesas">MESAS</span>
+            <h2 id="statMesasVal">0</h2>
+            <small id="statMesasSub">pedidos de mesa</small>
+          </div>
+          <div class="stat domicilios">
+            <span id="statDomicilios">DOMICILIOS</span>
+            <h2 id="statDomiciliosVal">0</h2>
+            <small id="statDomiciliosSub">pedidos a domicilio</small>
+          </div>
+          <div class="stat promedio">
+            <span id="statPromedio">TICKET PROMEDIO</span>
+            <h2 id="statPromedioVal">$0</h2>
+            <small id="statPromedioSub">por pedido</small>
+          </div>
+        </section>
+
+        <!-- FILTERS -->
+        <section class="filters">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Buscar pedido, mesa o cajero..."
+          />
+          <select id="filterFecha">
+            <option value="hoy">Hoy</option>
+            <option value="ayer">Ayer</option>
+            <option value="semana">Esta semana</option>
+            <option value="mes">Este mes</option>
+            <option value="todo">Todo</option>
+          </select>
+          <select id="filterTipo">
+            <option value="todos">Todos los tipos</option>
+            <option value="mesa">Mesa</option>
+            <option value="domicilio">Domicilio</option>
+            <option value="rapido">Rápido</option>
+          </select>
+          <div class="tabs">
+            <button class="active" data-estado="todos" id="tabTodos">
+              Todos
+            </button>
+            <button data-estado="cobrado" id="tabCobrado">Cobrados</button>
+            <button data-estado="pendiente" id="tabPendiente">
+              Pendientes
+            </button>
+            <button data-estado="cancelado" id="tabCancelado">
+              Cancelados
+            </button>
+          </div>
+        </section>
+
+        <!-- TABLE -->
+        <section class="table-wrapper">
+          <div class="table-head">
+            <span id="thId">ID</span>
+            <span id="thTipo">TIPO</span>
+            <span id="thItems">ITEMS</span>
+            <span id="thTotal">TOTAL</span>
+            <span id="thHora">HORA</span>
+            <span id="thCajero">CAJERO</span>
+            <span id="thEstado">ESTADO</span>
+            <span></span>
+          </div>
+          <div id="tableBody"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- MODAL DETALLE -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <div class="modal-header">
+          <div>
+            <h2 id="modalTitle">Detalle del pedido</h2>
+            <span id="modalId" class="modal-id"></span>
+          </div>
+          <button class="close-modal" id="closeModal">&times;</button>
+        </div>
+
+        <div class="modal-info-grid">
+          <div class="modal-info-item">
+            <span id="modalLabelTipo">Tipo</span>
+            <strong id="modalTipo">—</strong>
+          </div>
+          <div class="modal-info-item">
+            <span id="modalLabelHora">Hora</span>
+            <strong id="modalHora">—</strong>
+          </div>
+          <div class="modal-info-item">
+            <span id="modalLabelCajero">Cajero</span>
+            <strong id="modalCajero">—</strong>
+          </div>
+          <div class="modal-info-item">
+            <span id="modalLabelEstado">Estado</span>
+            <strong id="modalEstado">—</strong>
+          </div>
+        </div>
+
+        <div class="modal-items-section">
+          <h3 id="modalLabelItems">Productos del pedido</h3>
+          <div id="modalItems"></div>
+        </div>
+
+        <div class="modal-totals">
+          <div class="modal-total-row">
+            <span id="modalLabelSubtotal">Subtotal</span>
+            <span id="modalSubtotal">$0</span>
+          </div>
+          <div class="modal-total-row">
+            <span id="modalLabelImpuesto">Impuestos (10%)</span>
+            <span id="modalImpuesto">$0</span>
+          </div>
+          <div class="modal-total-row modal-total-final">
+            <span id="modalLabelTotal">Total</span>
+            <strong id="modalTotal">$0</strong>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-modal-cancel" id="btnCancelarPedido">
+            Cancelar pedido
+          </button>
+          <button class="btn-modal-close" id="btnCerrarModal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
+
+    <script src="historial.js"></script>
+  </body>
+</html>
