@@ -331,8 +331,8 @@ function render() {
       </div>
 
       <div class="card-actions">
-        ${puedeRetroceder ? `<button class="btn-action btn-back" onclick="retrocederEstado(${p.id}, event)" title="${t.titleBack}">◀</button>` : ''}
-        ${puedeAvanzar ? `<button class="btn-action btn-forward" onclick="avanzarEstado(${p.id}, event)" title="${t.titleForward}">▶</button>` : ''}
+        ${puedeRetroceder ? `<button class="btn-action btn-back" onclick="retrocederEstado(${p.id}, event)" title="${t.titleBack}">◀</button>` : '<button class="btn-action btn-black" title="${t.titleBack}">◀</button>'}
+        ${puedeAvanzar ? `<button class="btn-action btn-forward" onclick="avanzarEstado(${p.id}, event)" title="${t.titleForward}">▶</button>` : '<button class="btn-action btn-black" title="${t.titleForward}">▶</button>'}
         <button class="btn-action btn-delete" onclick="eliminarPedido(${p.id}, event)" title="${t.titleDelete}">🗑</button>
       </div>
     `;
