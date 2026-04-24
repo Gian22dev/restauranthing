@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Techos Rojos – Mesas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:        #b41800;
+      --red-hover:  #961400;
+      --red-dark:   #7e1100;
+      --red-soft:   #fae8e5;
+      --red-ghost:  rgba(180,24,0,.08);
+      --red-glow:   rgba(180,24,0,.15);
+
+      --bg:         #ffffff;
+      --bg-soft:    #fdfaf9;
+      --bg-muted:   #f5f0ee;
+      --bg-warm:    #faf6f4;
+
+      --ink:        #1a1208;
+      --ink-soft:   #4a4038;
+      --muted:      #9a8f89;
+      --border:     rgba(180,24,0,.18);
+      --border-light: rgba(180,24,0,.10);
+
+      --green:      #1a7a4a;
+      --green-soft: #e8f5ee;
+      --amber:      #c47a00;
+      --amber-soft: #fff3db;
+
+      --radius:     12px;
+      --radius-lg:  18px;
+      --radius-xl:  26px;
+      --shadow-sm:  0 1px 4px rgba(60,20,10,.07);
+      --shadow-md:  0 6px 22px rgba(60,20,10,.11);
+      --shadow-lg:  0 18px 52px rgba(60,20,10,.16);
+      --t:          .2s cubic-bezier(.4,0,.2,1);
+
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-soft);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* ─── LAYOUT ──────────────────────────────────── */
+    .app { display:flex; height:100vh; }
+
+    /* ─── SIDEBAR ─────────────────────────────────── */
+    .sidebar {
+      width: 220px;
+      background: var(--red);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+      gap: 0;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .sidebar::before {
+      content:'';
+      position:absolute;
+      top:-80px; right:-80px;
+      width:200px; height:200px;
+      background: rgba(255,255,255,.06);
+      border-radius:50%;
+      pointer-events:none;
+    }
+    .sidebar::after {
+      content:'';
+      position:absolute;
+      bottom:-60px; left:-60px;
+      width:180px; height:180px;
+      background: rgba(0,0,0,.08);
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .brand {
+      display:flex; align-items:center; gap:10px;
+      margin-bottom: 32px;
+      padding: 0 8px;
+    }
+    .brand-icon {
+      width:34px; height:34px;
+      background: rgba(255,255,255,.2);
+      border-radius:8px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px;
+    }
+    .brand-name {
+      font-family: var(--font-display);
+      font-size:15px;
+      font-weight:700;
+      color:white;
+      line-height:1.2;
+    }
+    .brand-name span { display:block; font-size:10px; font-family:var(--font-body); font-weight:400; opacity:.7; letter-spacing:.05em; text-transform:uppercase; }
+
+    .user-card {
+      background: rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      padding: 12px;
+      display:flex; align-items:center; gap:10px;
+      margin-bottom: 24px;
+    }
+    .avatar {
+      width:36px; height:36px;
+      background: rgba(255,255,255,.9);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:16px;
+      flex-shrink:0;
+    }
+    .user-info { flex:1; min-width:0; }
+    .user-name { font-size:13px; font-weight:600; color:white; }
+    .user-role { font-size:11px; color:rgba(255,255,255,.65); }
+
+    nav { display:flex; flex-direction:column; gap:4px; flex:1; }
+    nav a {
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius:var(--radius);
+      color:rgba(255,255,255,.72);
+      font-size:13px; font-weight:500;
+      cursor:pointer;
+      transition: var(--t);
+      text-decoration:none;
+    }
+    nav a .nav-icon { font-size:16px; width:20px; text-align:center; }
+    nav a.active { background:white; color:var(--red); font-weight:600; }
+    nav a:not(.active):hover { background:rgba(255,255,255,.12); color:white; }
+
+    .sidebar-footer {
+      margin-top:auto;
+      padding-top:16px;
+      border-top:1px solid rgba(255,255,255,.15);
+    }
+    .time-display {
+      font-family: var(--font-mono);
+      font-size:20px; font-weight:500;
+      color:white;
+      text-align:center;
+    }
+    .date-display { font-size:11px; color:rgba(255,255,255,.6); text-align:center; margin-top:2px; }
+
+    /* ─── MAIN ────────────────────────────────────── */
+    .main {
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      background: var(--bg-soft);
+    }
+
+    /* ─── TOPBAR ──────────────────────────────────── */
+    .topbar {
+      background:var(--bg);
+      border-bottom:1px solid var(--border-light);
+      padding: 16px 28px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px;
+      flex-shrink:0;
+    }
+    .topbar-left { display:flex; align-items:baseline; gap:14px; }
+    .topbar h1 { font-family:var(--font-display); font-size:26px; font-weight:700; color:var(--ink); }
+    .stats-pills { display:flex; gap:8px; }
+    .pill {
+      display:inline-flex; align-items:center; gap:5px;
+      padding:4px 10px;
+      border-radius:20px;
+      font-size:12px; font-weight:600;
+      border:1px solid transparent;
+    }
+    .pill.active-pill { background:var(--green-soft); color:var(--green); border-color:rgba(26,122,74,.2); }
+    .pill.inactive-pill { background:var(--bg-muted); color:var(--muted); border-color:var(--border-light); }
+    .pill-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+    .topbar-actions { display:flex; gap:8px; align-items:center; }
+
+    .btn {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:9px 16px;
+      border-radius:var(--radius);
+      font-size:13px; font-weight:600;
+      font-family:var(--font-body);
+      cursor:pointer; border:none;
+      transition:var(--t);
+    }
+    .btn-primary { background:var(--red); color:white; }
+    .btn-primary:hover:not(:disabled) { background:var(--red-hover); box-shadow:var(--shadow-md); }
+    .btn-outline { background:transparent; border:1px solid var(--border); color:var(--ink-soft); }
+    .btn-outline:hover:not(:disabled) { background:var(--red-ghost); color:var(--red); border-color:var(--red); }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+    .btn .icon { font-size:14px; }
+
+    /* ─── FILTER BAR ──────────────────────────────── */
+    .filter-bar {
+      padding: 12px 28px;
+      background:var(--bg);
+      border-bottom:1px solid var(--border-light);
+      display:flex; align-items:center; gap:8px;
+      flex-shrink:0;
+    }
+    .filter-chip {
+      padding:6px 14px;
+      border-radius:20px;
+      font-size:12px; font-weight:600;
+      border:1px solid var(--border-light);
+      background:var(--bg-muted);
+      color:var(--muted);
+      cursor:pointer; transition:var(--t);
+    }
+    .filter-chip.selected { background:var(--red); color:white; border-color:var(--red); }
+    .filter-chip:hover:not(.selected) { border-color:var(--red); color:var(--red); background:var(--red-ghost); }
+    .filter-label { font-size:12px; color:var(--muted); font-weight:500; margin-right:4px; }
+
+    /* ─── GRID AREA ───────────────────────────────── */
+    .grid-area {
+      flex:1;
+      overflow-y:auto;
+      padding: 24px 28px;
+    }
+    .grid-area::-webkit-scrollbar { width:5px; }
+    .grid-area::-webkit-scrollbar-track { background:transparent; }
+    .grid-area::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
+
+    .tables-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap:16px;
+    }
+
+    /* ─── TABLE CARD ──────────────────────────────── */
+    .table-card {
+      background:var(--bg);
+      border-radius:var(--radius-lg);
+      border:2px solid var(--border-light);
+      padding:20px 16px;
+      text-align:center;
+      cursor:pointer;
+      transition:var(--t);
+      position:relative;
+      overflow:hidden;
+      user-select:none;
+    }
+    .table-card::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      background:var(--red);
+      opacity:0;
+      transition:var(--t);
+    }
+    .table-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
+    .table-card:active { transform:translateY(0); }
+
+    .table-card.status-active {
+      background:var(--red);
+      border-color:var(--red-dark);
+    }
+    .table-card.status-inactive {
+      background:var(--bg-muted);
+      border-color:var(--border-light);
+      opacity:.75;
+    }
+    .table-card.status-occupied {
+      background:linear-gradient(135deg,#1a7a4a,#15623c);
+      border-color:#156b3e;
+    }
+
+    .table-card:hover { border-color: var(--red); }
+    .table-card.status-active:hover { border-color:var(--red-dark); }
+    .table-card.status-occupied:hover { border-color:#0e4d2c; }
+
+    .tc-number {
+      font-family: var(--font-mono);
+      font-size:11px; font-weight:500;
+      position:absolute; top:10px; left:12px;
+      opacity:.6;
+    }
+    .table-card.status-active .tc-number,
+    .table-card.status-occupied .tc-number { color:rgba(255,255,255,.7); }
+    .table-card.status-inactive .tc-number { color:var(--muted); }
+
+    .tc-accounts-badge {
+      position:absolute; top:8px; right:8px;
+      background:rgba(255,255,255,.25);
+      color:white;
+      border-radius:10px;
+      padding:2px 7px;
+      font-size:10px; font-weight:700;
+      display:none;
+    }
+    .table-card.status-active .tc-accounts-badge,
+    .table-card.status-occupied .tc-accounts-badge { display:block; }
+
+    .tc-icon {
+      font-size:36px;
+      margin:18px 0 10px;
+      display:block;
+      filter:drop-shadow(0 2px 4px rgba(0,0,0,.15));
+    }
+    .tc-name {
+      font-size:14px; font-weight:700;
+      margin-bottom:4px;
+    }
+    .table-card.status-active .tc-name,
+    .table-card.status-occupied .tc-name { color:white; }
+    .table-card.status-inactive .tc-name { color:var(--ink-soft); }
+
+    .tc-status {
+      font-size:11px; font-weight:500;
+      padding:3px 8px;
+      border-radius:10px;
+      display:inline-block;
+    }
+    .table-card.status-active .tc-status { background:rgba(255,255,255,.2); color:rgba(255,255,255,.9); }
+    .table-card.status-occupied .tc-status { background:rgba(255,255,255,.2); color:rgba(255,255,255,.9); }
+    .table-card.status-inactive .tc-status { background:var(--bg-soft); color:var(--muted); }
+
+    .tc-total {
+      font-size:13px; font-weight:700;
+      color:rgba(255,255,255,.95);
+      margin-top:6px;
+      font-family:var(--font-mono);
+    }
+
+    /* ─── MODAL OVERLAY ───────────────────────────── */
+    .overlay {
+      position:fixed; inset:0;
+      background:rgba(10,5,0,.5);
+      backdrop-filter:blur(4px);
+      display:flex; align-items:center; justify-content:center;
+      z-index:100; padding:20px;
+      animation:fadeIn .15s ease;
+    }
+    .overlay.hidden { display:none; }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+    .modal {
+      background:var(--bg);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow-lg);
+      border:1px solid var(--border-light);
+      width:min(640px,100%);
+      max-height:90vh;
+      overflow-y:auto;
+      animation:slideUp .2s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:none;opacity:1} }
+    .modal::-webkit-scrollbar { width:4px; }
+    .modal::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
+
+    .modal-header {
+      padding:22px 24px 18px;
+      border-bottom:1px solid var(--border-light);
+      display:flex; justify-content:space-between; align-items:flex-start;
+      gap:16px;
+      position:sticky; top:0;
+      background:var(--bg);
+      z-index:1;
+    }
+    .modal-title-group { flex:1; }
+    .modal-title {
+      font-family:var(--font-display);
+      font-size:22px; font-weight:700;
+      color:var(--ink); margin-bottom:4px;
+    }
+    .modal-subtitle { font-size:13px; color:var(--muted); display:flex; align-items:center; gap:8px; }
+    .status-badge {
+      display:inline-flex; align-items:center; gap:5px;
+      font-size:12px; font-weight:600;
+      padding:3px 10px; border-radius:20px;
+    }
+    .status-badge.active { background:var(--red-soft); color:var(--red); }
+    .status-badge.inactive { background:var(--bg-muted); color:var(--muted); }
+    .status-badge.occupied { background:var(--green-soft); color:var(--green); }
+    .status-badge .dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+    .modal-close {
+      width:32px; height:32px;
+      border:none; background:var(--bg-muted);
+      border-radius:50%; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; color:var(--ink-soft);
+      transition:var(--t); flex-shrink:0;
+    }
+    .modal-close:hover { background:var(--red-soft); color:var(--red); }
+
+    /* Tabs */
+    .modal-tabs {
+      display:flex; border-bottom:1px solid var(--border-light);
+      padding:0 24px;
+    }
+    .tab-btn {
+      padding:12px 16px;
+      border:none; background:transparent;
+      font-size:13px; font-weight:600;
+      color:var(--muted); cursor:pointer;
+      border-bottom:2px solid transparent;
+      margin-bottom:-1px;
+      transition:var(--t);
+      font-family:var(--font-body);
+    }
+    .tab-btn.active { color:var(--red); border-bottom-color:var(--red); }
+    .tab-btn:hover:not(.active) { color:var(--ink-soft); }
+
+    .tab-panel { display:none; padding:20px 24px; }
+    .tab-panel.active { display:block; }
+
+    /* ─── QUICK ACTIONS ───────────────────────────── */
+    .quick-actions {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:8px; margin-bottom:20px;
+    }
+    .qa-btn {
+      display:flex; align-items:center; gap:8px;
+      padding:12px 14px;
+      border-radius:var(--radius);
+      border:1px solid var(--border-light);
+      background:var(--bg-muted);
+      color:var(--ink-soft);
+      font-size:13px; font-weight:600;
+      cursor:pointer; transition:var(--t);
+      font-family:var(--font-body);
+    }
+    .qa-btn:hover { background:var(--red-ghost); border-color:var(--red); color:var(--red); }
+    .qa-btn .qa-icon { font-size:16px; }
+    .qa-btn.danger { border-color:rgba(180,24,0,.2); }
+    .qa-btn.danger:hover { background:#fae8e5; color:var(--red-dark); border-color:var(--red); }
+
+    /* ─── ACCOUNTS ────────────────────────────────── */
+    .accounts-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .accounts-header h3 { font-size:15px; font-weight:700; color:var(--ink); }
+    .btn-sm {
+      padding:6px 12px; font-size:12px;
+      border-radius:var(--radius);
+    }
+
+    .accounts-list { display:flex; flex-direction:column; gap:10px; }
+
+    .account-card {
+      border:1px solid var(--border-light);
+      border-radius:var(--radius);
+      overflow:hidden;
+      transition:var(--t);
+    }
+    .account-card:hover { border-color:var(--red); box-shadow:var(--shadow-sm); }
+
+    .account-head {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 14px;
+      background:var(--bg-muted);
+      cursor:pointer;
+    }
+    .account-head-left { display:flex; align-items:center; gap:10px; }
+    .account-num {
+      width:26px; height:26px;
+      background:var(--red);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:11px; font-weight:700; color:white;
+      font-family:var(--font-mono);
+    }
+    .account-name { font-size:13px; font-weight:600; color:var(--ink); }
+    .account-items-count { font-size:11px; color:var(--muted); }
+    .account-total {
+      font-family:var(--font-mono);
+      font-size:14px; font-weight:700;
+      color:var(--red);
+    }
+    .account-actions { display:flex; gap:6px; padding:0 4px; }
+    .acc-action {
+      padding:4px 8px;
+      border-radius:8px;
+      border:1px solid var(--border-light);
+      background:white;
+      font-size:11px; font-weight:600;
+      color:var(--ink-soft);
+      cursor:pointer; transition:var(--t);
+    }
+    .acc-action:hover { background:var(--red); color:white; border-color:var(--red); }
+    .acc-action.cobrar { background:var(--green); color:white; border-color:var(--green); }
+    .acc-action.cobrar:hover { background:#156b3e; }
+
+    .account-items {
+      padding:0 14px;
+      max-height:0; overflow:hidden;
+      transition:max-height .3s ease, padding .3s ease;
+    }
+    .account-items.open { max-height:600px; padding:12px 14px; }
+
+    .item-row {
+      display:flex; align-items:center; gap:10px;
+      padding:8px 0;
+      border-bottom:1px solid var(--border-light);
+    }
+    .item-row:last-child { border-bottom:none; }
+    .item-name { flex:1; font-size:13px; color:var(--ink-soft); }
+    .item-qty {
+      display:flex; align-items:center; gap:6px;
+    }
+    .qty-btn {
+      width:22px; height:22px;
+      border:1px solid var(--border);
+      background:white; border-radius:6px;
+      font-size:14px; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      color:var(--ink); transition:var(--t);
+      line-height:1;
+    }
+    .qty-btn:hover { background:var(--red); color:white; border-color:var(--red); }
+    .qty-num {
+      font-family:var(--font-mono);
+      font-size:13px; font-weight:600;
+      min-width:20px; text-align:center;
+      color:var(--ink);
+    }
+    .item-price {
+      font-family:var(--font-mono);
+      font-size:13px; font-weight:600;
+      color:var(--ink);
+      min-width:60px; text-align:right;
+    }
+    .item-obs-btn {
+      padding:3px 7px;
+      border:1px solid var(--border-light);
+      background:transparent; border-radius:6px;
+      font-size:10px; font-weight:600;
+      color:var(--muted); cursor:pointer; transition:var(--t);
+    }
+    .item-obs-btn:hover { border-color:var(--amber); color:var(--amber); }
+    .item-obs-btn.has-obs { border-color:var(--amber); color:var(--amber); background:var(--amber-soft); }
+    .item-del {
+      width:22px; height:22px;
+      border:none; background:transparent;
+      color:var(--muted); cursor:pointer;
+      font-size:14px; border-radius:4px;
+      transition:var(--t);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .item-del:hover { background:var(--red-soft); color:var(--red); }
+
+    .add-product-row {
+      display:flex; gap:8px; margin-top:10px;
+    }
+    .add-product-input {
+      flex:1; padding:8px 12px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      font-size:13px; color:var(--ink);
+      background:var(--bg-soft);
+      font-family:var(--font-body);
+      outline:none;
+    }
+    .add-product-input:focus { border-color:var(--red); box-shadow:0 0 0 3px var(--red-ghost); }
+    .add-product-price {
+      width:90px; padding:8px 12px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      font-size:13px; color:var(--ink);
+      background:var(--bg-soft);
+      font-family:var(--font-mono);
+      outline:none;
+    }
+    .add-product-price:focus { border-color:var(--red); box-shadow:0 0 0 3px var(--red-ghost); }
+
+    /* ─── OBSERVATION MODAL ───────────────────────── */
+    .obs-overlay {
+      position:fixed; inset:0;
+      background:rgba(10,5,0,.4);
+      display:flex; align-items:center; justify-content:center;
+      z-index:200; padding:20px;
+    }
+    .obs-overlay.hidden { display:none; }
+    .obs-modal {
+      background:var(--bg);
+      border-radius:var(--radius-lg);
+      padding:24px;
+      width:min(400px,100%);
+      box-shadow:var(--shadow-lg);
+    }
+    .obs-modal h4 { font-size:16px; font-weight:700; margin-bottom:12px; color:var(--ink); }
+    .obs-textarea {
+      width:100%; min-height:90px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:12px;
+      font-size:13px; color:var(--ink);
+      font-family:var(--font-body);
+      resize:vertical; outline:none;
+      background:var(--bg-muted);
+    }
+    .obs-textarea:focus { border-color:var(--red); box-shadow:0 0 0 3px var(--red-ghost); }
+    .obs-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+
+    /* ─── MOVE PRODUCT MODAL ──────────────────────── */
+    .move-overlay {
+      position:fixed; inset:0;
+      background:rgba(10,5,0,.4);
+      display:flex; align-items:center; justify-content:center;
+      z-index:200; padding:20px;
+    }
+    .move-overlay.hidden { display:none; }
+    .move-modal {
+      background:var(--bg);
+      border-radius:var(--radius-lg);
+      padding:24px;
+      width:min(380px,100%);
+      box-shadow:var(--shadow-lg);
+    }
+    .move-modal h4 { font-size:16px; font-weight:700; margin-bottom:4px; color:var(--ink); }
+    .move-modal p { font-size:13px; color:var(--muted); margin-bottom:16px; }
+    .move-options { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+    .move-option {
+      padding:10px 14px;
+      border:1px solid var(--border-light);
+      border-radius:var(--radius);
+      cursor:pointer;
+      font-size:13px; font-weight:600;
+      color:var(--ink-soft);
+      transition:var(--t);
+    }
+    .move-option:hover { background:var(--red-ghost); border-color:var(--red); color:var(--red); }
+    .move-option.selected { background:var(--red); color:white; border-color:var(--red); }
+
+    /* ─── SPLIT ───────────────────────────────────── */
+    .split-section {
+      margin-top:16px;
+      padding:16px;
+      background:var(--bg-muted);
+      border-radius:var(--radius);
+      border:1px solid var(--border-light);
+    }
+    .split-row {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:10px; gap:12px;
+    }
+    .split-row label { font-size:13px; color:var(--ink-soft); font-weight:500; }
+    .split-input {
+      width:80px; padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      font-size:14px; font-weight:600;
+      font-family:var(--font-mono);
+      color:var(--ink); background:white;
+      outline:none; text-align:center;
+    }
+    .split-input:focus { border-color:var(--red); }
+    .split-result {
+      display:flex; justify-content:space-between;
+      font-size:14px;
+    }
+    .split-result strong { font-family:var(--font-mono); color:var(--red); font-size:16px; }
+
+    /* ─── CHANGE TABLE ────────────────────────────── */
+    .change-table-overlay {
+      position:fixed; inset:0;
+      background:rgba(10,5,0,.4);
+      display:flex; align-items:center; justify-content:center;
+      z-index:200; padding:20px;
+    }
+    .change-table-overlay.hidden { display:none; }
+    .change-table-modal {
+      background:var(--bg);
+      border-radius:var(--radius-lg);
+      padding:24px;
+      width:min(480px,100%);
+      box-shadow:var(--shadow-lg);
+    }
+    .change-table-modal h4 { font-size:17px; font-weight:700; margin-bottom:4px; color:var(--ink); }
+    .change-table-modal p { font-size:13px; color:var(--muted); margin-bottom:16px; }
+    .change-table-grid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
+      gap:10px; margin-bottom:16px;
+    }
+    .ct-option {
+      padding:12px 8px;
+      border:1px solid var(--border-light);
+      border-radius:var(--radius);
+      text-align:center;
+      cursor:pointer; transition:var(--t);
+      font-size:13px; font-weight:600; color:var(--ink-soft);
+    }
+    .ct-option:hover { border-color:var(--red); color:var(--red); background:var(--red-ghost); }
+    .ct-option.occupied { opacity:.5; cursor:not-allowed; }
+    .ct-option .ct-icon { font-size:18px; display:block; margin-bottom:4px; }
+
+    /* ─── TOAST ───────────────────────────────────── */
+    .toast-container {
+      position:fixed; top:20px; right:20px;
+      display:flex; flex-direction:column; gap:8px;
+      z-index:999;
+    }
+    .toast {
+      background:var(--ink);
+      color:white;
+      padding:10px 16px;
+      border-radius:var(--radius);
+      font-size:13px; font-weight:500;
+      box-shadow:var(--shadow-lg);
+      animation:toastIn .25s ease, toastOut .3s ease 2.7s forwards;
+      display:flex; align-items:center; gap:8px;
+    }
+    .toast.success { background:var(--green); }
+    .toast.warning { background:var(--amber); }
+    @keyframes toastIn { from{transform:translateX(20px);opacity:0} to{transform:none;opacity:1} }
+    @keyframes toastOut { to{transform:translateX(20px);opacity:0} }
+
+    /* ─── EMPTY STATE ─────────────────────────────── */
+    .empty-state {
+      grid-column:1/-1;
+      text-align:center;
+      padding:60px 20px;
+      color:var(--muted);
+    }
+    .empty-state .es-icon { font-size:48px; margin-bottom:12px; display:block; opacity:.5; }
+    .empty-state p { font-size:14px; }
+
+    /* ─── RECEIPT ─────────────────────────────────── */
+    .receipt-area { font-family:var(--font-mono); font-size:13px; }
+    .receipt-divider { border:none; border-top:1px dashed var(--border); margin:12px 0; }
+    .receipt-row { display:flex; justify-content:space-between; margin-bottom:6px; }
+    .receipt-total { font-size:16px; font-weight:700; }
+
+    /* ─── UTIL ────────────────────────────────────── */
+    .hidden { display:none !important; }
+    .divider { border:none; border-top:1px solid var(--border-light); margin:16px 0; }
+    .section-label {
+      font-size:11px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.08em;
+      color:var(--muted); margin-bottom:10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ── SIDEBAR ─────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🔴</div>
+      <div class="brand-name">Techos Rojos <span>Sistema POS</span></div>
+    </div>
+
+    <div class="user-card">
+      <div class="avatar">👤</div>
+      <div class="user-info">
+        <div class="user-name">Mesero</div>
+        <div class="user-role">Turno activo</div>
+      </div>
+    </div>
+
+    <nav>
+      <a class="active"><span class="nav-icon">🪑</span>Mesas</a>
+      <a href="#"><span class="nav-icon">⚡</span>Rápido</a>
+      <a href="#"><span class="nav-icon">🛵</span>Domicilios</a>
+      <a href="#"><span class="nav-icon">💰</span>Caja</a>
+      <a href="#"><span class="nav-icon">📦</span>Inventario</a>
+      <a href="#"><span class="nav-icon">📋</span>Historial</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="time-display" id="clock">--:--</div>
+      <div class="date-display" id="dateline">--</div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ───────────────────────────────── -->
+  <div class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>Mesas</h1>
+        <div class="stats-pills">
+          <span class="pill active-pill"><span class="pill-dot"></span><span id="active-count">0</span> activas</span>
+          <span class="pill inactive-pill"><span class="pill-dot"></span><span id="inactive-count">0</span> libres</span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-outline" id="btn-remove"><span class="icon">−</span> Eliminar</button>
+        <button class="btn btn-primary" id="btn-add"><span class="icon">＋</span> Añadir mesa</button>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <span class="filter-label">Ver:</span>
+      <button class="filter-chip selected" data-filter="all">Todas</button>
+      <button class="filter-chip" data-filter="active">Con clientes</button>
+      <button class="filter-chip" data-filter="inactive">Libres</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid-area">
+      <div class="tables-grid" id="tables-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  MAIN TABLE MODAL                          -->
+<!-- ══════════════════════════════════════════ -->
+<div class="overlay hidden" id="main-modal-overlay">
+  <div class="modal" id="main-modal">
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <div class="modal-title" id="modal-title">Mesa 1</div>
+        <div class="modal-subtitle">
+          <span class="status-badge active" id="modal-status-badge"><span class="dot"></span><span id="modal-status-text">Activa</span></span>
+          <span id="modal-accounts-info" style="color:var(--muted);font-size:12px;"></span>
+        </div>
+      </div>
+      <button class="modal-close" id="modal-close">×</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="modal-tabs">
+      <button class="tab-btn active" data-tab="acciones">Acciones</button>
+      <button class="tab-btn" data-tab="cuentas">Cuentas</button>
+      <button class="tab-btn" data-tab="comprobante">Comprobante</button>
+    </div>
+
+    <!-- TAB: ACCIONES -->
+    <div class="tab-panel active" id="tab-acciones">
+      <div class="section-label">Gestión de mesa</div>
+      <div class="quick-actions">
+        <button class="qa-btn" id="qa-toggle-status">
+          <span class="qa-icon">🔄</span> Cambiar estado
+        </button>
+        <button class="qa-btn" id="qa-change-table">
+          <span class="qa-icon">↔️</span> Cambiar mesa
+        </button>
+        <button class="qa-btn" id="qa-new-account">
+          <span class="qa-icon">➕</span> Nueva cuenta
+        </button>
+        <button class="qa-btn" id="qa-join-accounts">
+          <span class="qa-icon">🔗</span> Unir cuentas
+        </button>
+        <button class="qa-btn" id="qa-reprint">
+          <span class="qa-icon">🖨️</span> Reimprimir
+        </button>
+        <button class="qa-btn danger" id="qa-delete-table">
+          <span class="qa-icon">🗑️</span> Eliminar mesa
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB: CUENTAS -->
+    <div class="tab-panel" id="tab-cuentas">
+      <div class="accounts-header">
+        <div>
+          <div class="section-label" style="margin-bottom:0">Cuentas abiertas</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" id="btn-add-account">+ Cuenta</button>
+        </div>
+      </div>
+      <div class="accounts-list" id="accounts-list"></div>
+    </div>
+
+    <!-- TAB: COMPROBANTE -->
+    <div class="tab-panel" id="tab-comprobante">
+      <div class="section-label">Vista de comprobante</div>
+      <div class="receipt-area" id="receipt-area"></div>
+      <div class="split-section">
+        <div class="split-row">
+          <label>Dividir entre</label>
+          <input type="number" min="1" value="1" class="split-input" id="split-input">
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="split-result">
+          <span>Por persona</span>
+          <strong id="split-result">$0.00</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OBSERVATION MODAL -->
+<div class="obs-overlay hidden" id="obs-overlay">
+  <div class="obs-modal">
+    <h4>Observación del producto</h4>
+    <textarea class="obs-textarea" id="obs-textarea" placeholder="Ej: sin cebolla, término medio, extra salsa…"></textarea>
+    <div class="obs-actions">
+      <button class="btn btn-outline btn-sm" id="obs-cancel">Cancelar</button>
+      <button class="btn btn-primary btn-sm" id="obs-save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOVE PRODUCT MODAL -->
+<div class="move-overlay hidden" id="move-overlay">
+  <div class="move-modal">
+    <h4>Mover producto</h4>
+    <p id="move-product-name">Selecciona la cuenta destino</p>
+    <div class="move-options" id="move-options"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn btn-outline btn-sm" id="move-cancel">Cancelar</button>
+      <button class="btn btn-primary btn-sm" id="move-confirm">Mover</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE TABLE MODAL -->
+<div class="change-table-overlay hidden" id="change-table-overlay">
+  <div class="change-table-modal">
+    <h4>Cambiar mesa</h4>
+    <p id="change-table-subtitle">Selecciona la mesa destino (libres)</p>
+    <div class="change-table-grid" id="change-table-grid"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn btn-outline btn-sm" id="change-table-cancel">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+let tables = [
+  { id:1, number:1, status:'active', accounts:[
+    { id:'a1', name:'Cuenta 1', items:[
+      { id:'i1', name:'Ensalada César', price:12000, qty:1, obs:'' },
+      { id:'i2', name:'Pollo a la plancha', price:22000, qty:1, obs:'término bien cocido' },
+      { id:'i3', name:'Coca-Cola', price:4500, qty:2, obs:'' }
+    ]},
+    { id:'a2', name:'Cuenta 2', items:[
+      { id:'i4', name:'Tiramisú', price:9000, qty:1, obs:'' }
+    ]}
+  ]},
+  { id:2, number:2, status:'inactive', accounts:[] },
+  { id:3, number:3, status:'active', accounts:[
+    { id:'a3', name:'Cuenta 1', items:[
+      { id:'i5', name:'Sopa del día', price:8500, qty:1, obs:'' },
+      { id:'i6', name:'Filete empanizado', price:24000, qty:1, obs:'con papas fritas' }
+    ]}
+  ]},
+  { id:4, number:4, status:'active', accounts:[
+    { id:'a4', name:'Cuenta 1', items:[
+      { id:'i7', name:'Pizza familiar', price:30000, qty:1, obs:'' },
+      { id:'i8', name:'Agua mineral', price:3500, qty:3, obs:'' }
+    ]}
+  ]},
+  { id:5, number:5, status:'inactive', accounts:[] },
+  { id:6, number:6, status:'active', accounts:[
+    { id:'a5', name:'Cuenta 1', items:[
+      { id:'i9', name:'Pasta carbonara', price:17500, qty:1, obs:'' }
+    ]}
+  ]},
+];
+
+let activeFilter = 'all';
+let activeTableId = null;
+let activeObsItem = null;
+let activeMoveItem = null;
+let activeMoveFromAccount = null;
+let nextTableNum = 7;
+let nextAccountId = 100;
+let nextItemId = 200;
+
+// ═══════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════
+const uid = (prefix) => `${prefix}${Date.now()}${Math.random().toString(36).slice(2,5)}`;
+const fmt = (n) => '$' + n.toLocaleString('es-CO', {minimumFractionDigits:0});
+const getTable = () => tables.find(t => t.id === activeTableId);
+const accountTotal = (acc) => acc.items.reduce((s,i)=>s+i.price*i.qty,0);
+const tableGrandTotal = (tbl) => tbl.accounts.reduce((s,a)=>s+accountTotal(a),0);
+
+function toast(msg, type='') {
+  const el = document.createElement('div');
+  el.className = 'toast' + (type ? ' '+type : '');
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3100);
+}
+
+// ═══════════════════════════════════════════════════════
+//  CLOCK
+// ═══════════════════════════════════════════════════════
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('dateline').textContent = now.toLocaleDateString('es-CO',{weekday:'short',day:'numeric',month:'short'});
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ═══════════════════════════════════════════════════════
+//  RENDER GRID
+// ═══════════════════════════════════════════════════════
+function renderGrid() {
+  const grid = document.getElementById('tables-grid');
+  const filtered = activeFilter === 'all' ? tables
+    : activeFilter === 'active' ? tables.filter(t=>t.status==='active')
+    : tables.filter(t=>t.status==='inactive');
+
+  const active = tables.filter(t=>t.status==='active').length;
+  const inactive = tables.filter(t=>t.status==='inactive').length;
+  document.getElementById('active-count').textContent = active;
+  document.getElementById('inactive-count').textContent = inactive;
+
+  grid.innerHTML = '';
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty-state"><span class="es-icon">🪑</span><p>No hay mesas con este filtro</p></div>';
+    return;
+  }
+
+  filtered.forEach(t => {
+    const card = document.createElement('div');
+    const isActive = t.status === 'active';
+    const accountCount = t.accounts.length;
+    const total = tableGrandTotal(t);
+
+    card.className = `table-card status-${t.status}`;
+    card.dataset.id = t.id;
+    card.innerHTML = `
+      <span class="tc-number">#${t.number}</span>
+      ${isActive && accountCount > 0 ? `<span class="tc-accounts-badge">${accountCount} cuenta${accountCount>1?'s':''}</span>` : ''}
+      <span class="tc-icon">${isActive ? '🍽️' : '🪑'}</span>
+      <div class="tc-name">Mesa ${t.number}</div>
+      <div class="tc-status">${isActive ? 'Con clientes' : 'Libre'}</div>
+      ${isActive && total > 0 ? `<div class="tc-total">${fmt(total)}</div>` : ''}
+    `;
+    card.addEventListener('click', () => openModal(t.id));
+    grid.appendChild(card);
+  });
+
+  document.getElementById('btn-remove').disabled = tables.length <= 1;
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODAL OPEN / CLOSE
+// ═══════════════════════════════════════════════════════
+function openModal(tableId) {
+  activeTableId = tableId;
+  const t = getTable();
+  document.getElementById('modal-title').textContent = `Mesa ${t.number}`;
+  updateModalStatus(t);
+  switchTab('acciones');
+  document.getElementById('main-modal-overlay').classList.remove('hidden');
+  renderAccountsTab();
+}
+
+function closeModal() {
+  document.getElementById('main-modal-overlay').classList.add('hidden');
+  activeTableId = null;
+}
+
+function updateModalStatus(t) {
+  const badge = document.getElementById('modal-status-badge');
+  const statusText = document.getElementById('modal-status-text');
+  const info = document.getElementById('modal-accounts-info');
+  badge.className = `status-badge ${t.status}`;
+  statusText.textContent = t.status === 'active' ? 'Con clientes' : 'Libre';
+  info.textContent = t.accounts.length > 0 ? `· ${t.accounts.length} cuenta(s) · Total: ${fmt(tableGrandTotal(t))}` : '';
+}
+
+// ═══════════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════════
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-'+tabName));
+  if (tabName === 'cuentas') renderAccountsTab();
+  if (tabName === 'comprobante') renderReceipt();
+}
+
+document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+
+// ═══════════════════════════════════════════════════════
+//  ACCOUNTS TAB
+// ═══════════════════════════════════════════════════════
+function renderAccountsTab() {
+  const t = getTable(); if(!t) return;
+  const list = document.getElementById('accounts-list');
+  list.innerHTML = '';
+
+  if (!t.accounts.length) {
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted);font-size:13px;">No hay cuentas abiertas.<br>Crea una nueva cuenta para empezar.</div>';
+    return;
+  }
+
+  t.accounts.forEach((acc, ai) => {
+    const total = accountTotal(acc);
+    const card = document.createElement('div');
+    card.className = 'account-card';
+
+    const itemsHtml = acc.items.map((item, ii) => `
+      <div class="item-row" data-item-id="${item.id}" data-acc-id="${acc.id}">
+        <span class="item-name">${item.name}${item.obs ? `<br><span style="font-size:11px;color:var(--amber)">⚠ ${item.obs}</span>` : ''}</span>
+        <div class="item-qty">
+          <button class="qty-btn" onclick="changeQty('${acc.id}','${item.id}',-1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${acc.id}','${item.id}',1)">+</button>
+        </div>
+        <span class="item-price">${fmt(item.price * item.qty)}</span>
+        <button class="item-obs-btn ${item.obs?'has-obs':''}" onclick="openObs('${acc.id}','${item.id}')">obs</button>
+        <button class="item-del" onclick="deleteItem('${acc.id}','${item.id}')" title="Eliminar">✕</button>
+      </div>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="account-head" onclick="toggleAccordion(this)">
+        <div class="account-head-left">
+          <div class="account-num">${ai+1}</div>
+          <div>
+            <div class="account-name">${acc.name}</div>
+            <div class="account-items-count">${acc.items.length} producto(s)</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="account-total">${fmt(total)}</span>
+          <div class="account-actions" onclick="event.stopPropagation()">
+            <button class="acc-action" onclick="separateAccount('${acc.id}')">Separar</button>
+            <button class="acc-action cobrar" onclick="chargeAccount('${acc.id}')">Cobrar</button>
+          </div>
+        </div>
+      </div>
+      <div class="account-items open">
+        <div>${itemsHtml}</div>
+        <div class="add-product-row">
+          <input class="add-product-input" placeholder="Nombre del producto…" id="prod-name-${acc.id}">
+          <input class="add-product-price" placeholder="Precio" id="prod-price-${acc.id}" type="number" min="0">
+          <button class="btn btn-primary btn-sm" onclick="addProduct('${acc.id}')">+</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function toggleAccordion(head) {
+  const items = head.nextElementSibling;
+  items.classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════════════
+//  ITEM OPERATIONS
+// ═══════════════════════════════════════════════════════
+function changeQty(accId, itemId, delta) {
+  const t = getTable(); if(!t) return;
+  const acc = t.accounts.find(a=>a.id===accId);
+  const item = acc?.items.find(i=>i.id===itemId);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  renderAccountsTab();
+  renderGrid();
+  updateModalStatus(t);
+}
+
+function deleteItem(accId, itemId) {
+  const t = getTable(); if(!t) return;
+  const acc = t.accounts.find(a=>a.id===accId);
+  if (!acc) return;
+  acc.items = acc.items.filter(i=>i.id!==itemId);
+  if (!acc.items.length) {
+    t.accounts = t.accounts.filter(a=>a.id!==accId);
+    toast('Cuenta vacía eliminada');
+  }
+  renderAccountsTab();
+  renderGrid();
+  updateModalStatus(t);
+}
+
+function addProduct(accId) {
+  const t = getTable(); if(!t) return;
+  const nameEl = document.getElementById('prod-name-'+accId);
+  const priceEl = document.getElementById('prod-price-'+accId);
+  const name = nameEl.value.trim();
+  const price = parseFloat(priceEl.value);
+  if (!name || !price || price <= 0) { toast('Ingresa nombre y precio válidos','warning'); return; }
+  const acc = t.accounts.find(a=>a.id===accId);
+  if (!acc) return;
+  acc.items.push({ id:uid('i'), name, price, qty:1, obs:'' });
+  nameEl.value=''; priceEl.value='';
+  renderAccountsTab();
+  renderGrid();
+  updateModalStatus(t);
+  toast('Producto agregado','success');
+}
+
+// ─── OBSERVATION ───────────────────────────────────────
+function openObs(accId, itemId) {
+  const t = getTable(); if(!t) return;
+  const acc = t.accounts.find(a=>a.id===accId);
+  const item = acc?.items.find(i=>i.id===itemId);
+  if (!item) return;
+  activeMoveFromAccount = accId;
+  activeObsItem = itemId;
+  document.getElementById('obs-textarea').value = item.obs || '';
+  document.getElementById('obs-overlay').classList.remove('hidden');
+}
+
+document.getElementById('obs-save').addEventListener('click', () => {
+  const t = getTable(); if(!t) return;
+  const acc = t.accounts.find(a=>a.id===activeMoveFromAccount);
+  const item = acc?.items.find(i=>i.id===activeObsItem);
+  if (item) { item.obs = document.getElementById('obs-textarea').value.trim(); toast('Observación guardada','success'); }
+  document.getElementById('obs-overlay').classList.add('hidden');
+  renderAccountsTab();
+});
+document.getElementById('obs-cancel').addEventListener('click', () => { document.getElementById('obs-overlay').classList.add('hidden'); });
+
+// ─── ACCOUNT ACTIONS ───────────────────────────────────
+function chargeAccount(accId) {
+  const t = getTable(); if(!t) return;
+  const acc = t.accounts.find(a=>a.id===accId);
+  if (!acc) return;
+  const total = accountTotal(acc);
+  t.accounts = t.accounts.filter(a=>a.id!==accId);
+  if (!t.accounts.length) t.status = 'inactive';
+  toast(`✅ Cuenta cobrada: ${fmt(total)}`,'success');
+  renderAccountsTab();
+  renderGrid();
+  updateModalStatus(t);
+}
+
+function separateAccount(accId) {
+  const t = getTable(); if(!t) return;
+  if (t.accounts.length < 2) { toast('Solo hay una cuenta, no se puede separar','warning'); return; }
+  // Move last item to new account
+  const acc = t.accounts.find(a=>a.id===accId);
+  if (!acc || acc.items.length < 2) { toast('Se necesitan al menos 2 productos para separar','warning'); return; }
+  const item = acc.items.pop();
+  const newAcc = { id:uid('a'), name:`Cuenta ${t.accounts.length+1}`, items:[item] };
+  t.accounts.push(newAcc);
+  toast('Producto separado en nueva cuenta','success');
+  renderAccountsTab();
+  updateModalStatus(t);
+}
+
+// ─── JOIN ACCOUNTS ─────────────────────────────────────
+document.getElementById('qa-join-accounts').addEventListener('click', () => {
+  const t = getTable(); if(!t) return;
+  if (t.accounts.length < 2) { toast('Se necesitan al menos 2 cuentas para unir','warning'); return; }
+  const allItems = t.accounts.flatMap(a=>a.items);
+  t.accounts = [{ id:uid('a'), name:'Cuenta unificada', items:allItems }];
+  toast('Cuentas unidas exitosamente','success');
+  renderAccountsTab();
+  updateModalStatus(t);
+  switchTab('cuentas');
+});
+
+// ─── NEW ACCOUNT ───────────────────────────────────────
+function addNewAccount() {
+  const t = getTable(); if(!t) return;
+  const newAcc = { id:uid('a'), name:`Cuenta ${t.accounts.length+1}`, items:[] };
+  t.accounts.push(newAcc);
+  if (t.status === 'inactive') t.status = 'active';
+  renderAccountsTab();
+  renderGrid();
+  updateModalStatus(t);
+  switchTab('cuentas');
+  toast('Nueva cuenta creada','success');
+}
+document.getElementById('qa-new-account').addEventListener('click', addNewAccount);
+document.getElementById('btn-add-account').addEventListener('click', addNewAccount);
+
+// ═══════════════════════════════════════════════════════
+//  RECEIPT TAB
+// ═══════════════════════════════════════════════════════
+function renderReceipt() {
+  const t = getTable(); if(!t) return;
+  const area = document.getElementById('receipt-area');
+  const now = new Date();
+  const dateStr = now.toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
+  let html = `
+    <div style="text-align:center;margin-bottom:12px;">
+      <div style="font-weight:700;font-size:15px;">TECHOS ROJOS</div>
+      <div style="font-size:11px;color:var(--muted)">${dateStr}</div>
+      <div style="font-size:12px;margin-top:4px;">Mesa ${t.number}</div>
+    </div>
+    <hr class="receipt-divider">
+  `;
+
+  let grand = 0;
+  t.accounts.forEach((acc, ai) => {
+    const total = accountTotal(acc);
+    grand += total;
+    html += `<div style="font-weight:700;font-size:12px;margin-bottom:6px;color:var(--red)">${acc.name}</div>`;
+    acc.items.forEach(item => {
+      html += `<div class="receipt-row"><span>${item.qty}× ${item.name}</span><span>${fmt(item.price*item.qty)}</span></div>`;
+    });
+    html += `<div class="receipt-row" style="margin-top:4px;padding-top:4px;border-top:1px solid var(--border-light)"><span>Subtotal</span><span style="font-weight:600">${fmt(total)}</span></div><hr class="receipt-divider">`;
+  });
+
+  html += `<div class="receipt-row receipt-total"><span>TOTAL</span><span style="color:var(--red)">${fmt(grand)}</span></div>`;
+  area.innerHTML = html;
+
+  const splitIn = document.getElementById('split-input');
+  const updateSplit = () => {
+    const n = Math.max(1, parseInt(splitIn.value)||1);
+    document.getElementById('split-result').textContent = fmt(Math.ceil(grand/n));
+  };
+  splitIn.removeEventListener('input', splitIn._handler);
+  splitIn._handler = updateSplit;
+  splitIn.addEventListener('input', updateSplit);
+  updateSplit();
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOGGLE STATUS
+// ═══════════════════════════════════════════════════════
+document.getElementById('qa-toggle-status').addEventListener('click', () => {
+  const t = getTable(); if(!t) return;
+  t.status = t.status === 'active' ? 'inactive' : 'active';
+  updateModalStatus(t);
+  renderGrid();
+  toast(`Mesa ${t.number} marcada como ${t.status === 'active' ? 'con clientes' : 'libre'}`,'success');
+});
+
+// ═══════════════════════════════════════════════════════
+//  CHANGE TABLE
+// ═══════════════════════════════════════════════════════
+document.getElementById('qa-change-table').addEventListener('click', () => {
+  const t = getTable(); if(!t) return;
+  const grid = document.getElementById('change-table-grid');
+  document.getElementById('change-table-subtitle').textContent = `Selecciona la mesa destino (actualmente Mesa ${t.number})`;
+  grid.innerHTML = '';
+  tables.filter(tb=>tb.id!==t.id).forEach(tb=>{
+    const opt = document.createElement('div');
+    opt.className = `ct-option ${tb.status==='active'?'occupied':''}`;
+    opt.innerHTML = `<span class="ct-icon">${tb.status==='active'?'🍽️':'🪑'}</span>Mesa ${tb.number}`;
+    if (tb.status !== 'active') {
+      opt.addEventListener('click', () => {
+        const oldNum = t.number;
+        t.number = tb.number;
+        tb.number = oldNum;
+        // swap statuses if needed
+        document.getElementById('change-table-overlay').classList.add('hidden');
+        document.getElementById('modal-title').textContent = `Mesa ${t.number}`;
+        renderGrid();
+        toast(`Mesa movida a Mesa ${t.number}`,'success');
+      });
+    }
+    grid.appendChild(opt);
+  });
+  document.getElementById('change-table-overlay').classList.remove('hidden');
+});
+document.getElementById('change-table-cancel').addEventListener('click', () => document.getElementById('change-table-overlay').classList.add('hidden'));
+
+// ═══════════════════════════════════════════════════════
+//  DELETE TABLE
+// ═══════════════════════════════════════════════════════
+document.getElementById('qa-delete-table').addEventListener('click', () => {
+  const t = getTable(); if(!t) return;
+  if (tables.length <= 1) { toast('No puedes eliminar la única mesa','warning'); return; }
+  const confirm = window.confirm(`¿Eliminar Mesa ${t.number}? Se perderán todas las cuentas.`);
+  if (!confirm) return;
+  tables = tables.filter(tb=>tb.id!==t.id);
+  closeModal();
+  renderGrid();
+  toast(`Mesa ${t.number} eliminada`);
+});
+
+// ═══════════════════════════════════════════════════════
+//  REPRINT
+// ═══════════════════════════════════════════════════════
+document.getElementById('qa-reprint').addEventListener('click', () => {
+  toast('🖨️ Comprobante enviado a impresora','success');
+  switchTab('comprobante');
+});
+
+// ═══════════════════════════════════════════════════════
+//  ADD / REMOVE TABLE (topbar)
+// ═══════════════════════════════════════════════════════
+document.getElementById('btn-add').addEventListener('click', () => {
+  const newTable = { id:Date.now(), number:nextTableNum++, status:'inactive', accounts:[] };
+  tables.push(newTable);
+  renderGrid();
+  toast(`Mesa ${newTable.number} agregada`,'success');
+});
+
+document.getElementById('btn-remove').addEventListener('click', () => {
+  if (tables.length <= 1) return;
+  const last = tables[tables.length-1];
+  if (last.accounts.length) { toast('No puedes eliminar una mesa con cuentas activas','warning'); return; }
+  tables.pop();
+  renderGrid();
+  toast('Mesa eliminada');
+});
+
+// ═══════════════════════════════════════════════════════
+//  FILTERS
+// ═══════════════════════════════════════════════════════
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('selected'));
+    chip.classList.add('selected');
+    activeFilter = chip.dataset.filter;
+    renderGrid();
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+//  CLOSE MODAL
+// ═══════════════════════════════════════════════════════
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('main-modal-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+renderGrid();
+</script>
+</body>
+</html>
