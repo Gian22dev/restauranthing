@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Techos Rojos POS · Caja</title>
+  <meta name="description" content="POS Techos Rojos — Módulo de caja y cobro." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+  <style>
+    /* ── Caja-specific ──────────────────────────────────────── */
+
+    .caja-layout {
+      display: flex;
+      height: calc(100vh - var(--header-h));
+      overflow: hidden;
+    }
+
+    /* ── LEFT PANEL ─────────────────────────────────────────── */
+    .caja-left {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      min-width: 0;
+    }
+
+    .caja-section-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: var(--font-ui);
+      margin-bottom: .75rem;
+    }
+
+    /* Order summary */
+    .order-list {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    .order-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: .875rem;
+      padding: .75rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .order-item:last-child { border-bottom: none; }
+
+    .order-qty {
+      width: 32px; height: 32px;
+      background: var(--red-soft);
+      color: var(--red);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .8rem;
+      font-weight: 700;
+      font-family: var(--font-ui);
+      flex-shrink: 0;
+    }
+
+    .order-name {
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .order-meta {
+      font-size: .72rem;
+      color: var(--muted);
+      font-family: var(--font-ui);
+      margin-top: .1rem;
+    }
+
+    .order-price {
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    /* Payment methods */
+    .pay-methods {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .75rem;
+    }
+
+    .pay-option {
+      border: 1.5px solid var(--border-light);
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: .875rem .5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .375rem;
+      transition: var(--transition);
+      cursor: pointer;
+      touch-action: manipulation;
+      min-height: 80px;
+    }
+
+    .pay-option:hover { border-color: rgba(180,24,0,.4); }
+
+    .pay-option.active {
+      border-color: var(--red);
+      background: var(--red-soft);
+    }
+
+    .pay-cn {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--red);
+      line-height: 1;
+    }
+
+    .pay-name {
+      font-size: .78rem;
+      color: var(--ink-soft);
+      font-weight: 600;
+      font-family: var(--font-ui);
+      text-align: center;
+    }
+
+    .pay-option.active .pay-name { color: var(--red-dark); }
+
+    /* Cash panel */
+    .pay-panel {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+
+    .quick-cash {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .quick-cash button {
+      height: 38px;
+      padding: 0 1rem;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--ink-soft);
+      border-radius: 999px;
+      font-size: .82rem;
+      font-weight: 600;
+      font-family: var(--font-ui);
+      transition: var(--transition);
+      touch-action: manipulation;
+    }
+
+    .quick-cash button:hover { border-color: var(--red); color: var(--red); background: var(--red-ghost); }
+
+    .change-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .875rem 1rem;
+      background: var(--bg-muted);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      font-size: .875rem;
+      color: var(--ink-soft);
+    }
+
+    .change-box strong {
+      font-size: 1.2rem;
+      color: var(--red);
+      font-weight: 700;
+      font-family: var(--font-display);
+    }
+
+    /* QR panel */
+    .qr-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .75rem;
+      padding: 1.25rem;
+    }
+
+    .qr-panel img {
+      width: 160px;
+      height: 160px;
+      border-radius: var(--radius);
+      border: 2px solid var(--border-light);
+      padding: .5rem;
+      background: white;
+    }
+
+    /* Discount row */
+    .discount-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .discount-row .field-group { flex: 1; min-width: 140px; }
+
+    /* ── RIGHT PANEL ─────────────────────────────────────────── */
+    .caja-right {
+      width: 300px;
+      flex-shrink: 0;
+      background: var(--bg);
+      border-left: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .pay-summary {
+      flex: 1;
+      padding: 1.5rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .big-total-wrap {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      background: var(--red);
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .big-total-wrap::before {
+      content: '总';
+      position: absolute;
+      right: .5rem; bottom: -.5rem;
+      font-family: var(--font-display);
+      font-size: 5rem;
+      color: rgba(255,255,255,.1);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .big-total-label {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.7);
+      font-family: var(--font-ui);
+      margin-bottom: .3rem;
+    }
+
+    .big-total {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+    }
+
+    .big-total-method {
+      font-size: .78rem;
+      color: rgba(255,255,255,.7);
+      margin-top: .35rem;
+      font-family: var(--font-ui);
+    }
+
+    .info-rows {
+      display: flex;
+      flex-direction: column;
+      gap: .1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .55rem 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: .82rem;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+    .info-row span:first-child { color: var(--muted); font-family: var(--font-ui); }
+    .info-row span:last-child { font-weight: 700; color: var(--ink); }
+
+    .caja-right__actions {
+      padding: 1rem 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+      flex-shrink: 0;
+      border-top: 1px solid var(--border-light);
+    }
+
+    /* ── Success Modal ───────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(20,10,10,.5);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      z-index: 100;
+      animation: fadeIn .25s ease;
+    }
+
+    .modal-overlay[hidden] { display: none; }
+
+    .modal-card {
+      background: var(--bg);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem 2rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      animation: pop .35s cubic-bezier(.2,.9,.3,1.2);
+      border: 1px solid var(--border-light);
+    }
+
+    .success-icon {
+      width: 80px; height: 80px;
+      background: var(--red-soft);
+      color: var(--red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+
+    .modal-cn {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      color: var(--red);
+      line-height: 1;
+      margin-bottom: .25rem;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: .5rem;
+    }
+
+    .modal-receipt {
+      background: var(--bg-soft);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 1rem;
+      text-align: left;
+      margin: 1.25rem 0;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .82rem;
+      padding: .3rem 0;
+      border-bottom: 1px dashed var(--border-light);
+    }
+    .receipt-row:last-child { border-bottom: none; font-weight: 700; }
+    .receipt-row span:first-child { color: var(--muted); font-family: var(--font-ui); }
+
+    /* ── Ramen decoration ───────────────────────────────────── */
+    .ramen-deco {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 100px;
+      opacity: .2;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(15deg);
+    }
+
+    /* ── Tablet responsive ──────────────────────────────────── */
+    @media (max-width: 900px) {
+      .caja-layout { flex-direction: column; height: auto; min-height: calc(100vh - var(--header-h)); }
+      .caja-right {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border-light);
+      }
+      .pay-methods { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 540px) {
+      .pay-methods { grid-template-columns: repeat(2, 1fr); }
+      .big-total { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Kanji decorativos -->
+<span class="kanji-bg k1">红</span>
+<span class="kanji-bg k2">屋</span>
+
+<!-- Ramen deco -->
+<img src="chopsuey.png" alt="" class="ramen-deco" aria-hidden="true">
+
+<!-- ─── App Shell ─────────────────────────────────────────── -->
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo">
+        <img src="TRlogo.png" alt="TR" onerror="this.parentElement.outerHTML='<span class=\'sidebar__logo-text\'>红</span>'">
+      </div>
+      <div class="sidebar__info">
+        <h3>Techos Rojos</h3>
+        <span>Sistema POS</span>
+      </div>
+    </div>
+
+    <nav class="sidebar__nav">
+      <a href="#">
+        <span class="nav-icon">🏮</span>
+        <span>Mesas</span>
+      </a>
+      <a href="index.html">
+        <span class="nav-icon">⚡</span>
+        <span>Rápido</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">🛵</span>
+        <span>Domicilios</span>
+      </a>
+      <a href="caja.html" class="active">
+        <span class="nav-icon">💰</span>
+        <span>Caja</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">📦</span>
+        <span>Inventario</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">👤</span>
+        <span>Usuarios</span>
+      </a>
+    </nav>
+
+    <button class="sidebar__logout" onclick="location.href='index.html'">
+      <span>↩</span>
+      <span>Cerrar sesión</span>
+    </button>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-area">
+
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header__brand">
+        <div class="header__logo-wrap">
+          <img src="TRlogo.png" alt="TR" onerror="this.parentElement.outerHTML='<div class=\'header__logo-fallback\'>红</div>'">
+        </div>
+        <div>
+          <div class="header__title">Techos Rojos</div>
+          <div class="header__subtitle">Caja · <span class="cn">会计</span></div>
+        </div>
+      </div>
+
+      <div class="header__center">
+        <div class="stepper">
+          <div class="step done" data-step="1">
+            <div class="step-bullet">✓</div>
+            <span>Turno</span>
+          </div>
+          <div class="step-line done"></div>
+          <div class="step done" data-step="2">
+            <div class="step-bullet">✓</div>
+            <span>Productos</span>
+          </div>
+          <div class="step-line done"></div>
+          <div class="step active" data-step="3">
+            <div class="step-bullet">3</div>
+            <span>Caja</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header__right">
+        <div class="chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span id="todayDate"></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content-area">
+      <div class="caja-layout">
+
+        <!-- ====== LEFT PANEL ====== -->
+        <div class="caja-left">
+
+          <!-- Header text -->
+          <div>
+            <p class="eyebrow">Cobro · 会计</p>
+            <h2 class="display-title">
+              Cierra con precisión,<br>
+              <span class="accent">despide con gracia.</span>
+            </h2>
+          </div>
+
+          <!-- Order summary card -->
+          <div class="card">
+            <div class="card-body" style="padding-bottom:1rem;">
+              <div class="row-between mb-5">
+                <h3 class="section-title">Resumen del pedido</h3>
+                <span class="chip" id="orderId">—</span>
+              </div>
+              <ul class="order-list" id="orderList">
+                <li style="color:var(--muted);font-size:.875rem;padding:.5rem 0;">Sin productos.</li>
+              </ul>
+              <div class="divider" style="margin:.75rem 0;"></div>
+              <div class="totals">
+                <div class="total-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+                <div class="total-row"><span>Descuento</span><span id="discountRow">- $0.00</span></div>
+                <div class="total-row"><span>Impuestos (10%)</span><span id="tax">$0.00</span></div>
+                <div class="divider"></div>
+                <div class="total-row final"><span>Total a cobrar</span><span id="total">$0.00</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment method card -->
+          <div class="card">
+            <div class="card-body">
+              <p class="caja-section-label">Método de pago</p>
+              <div class="pay-methods mb-5" id="payMethods">
+                <button type="button" class="pay-option active" data-method="efectivo">
+                  <span class="pay-cn">现金</span>
+                  <span class="pay-name">Efectivo</span>
+                </button>
+                <button type="button" class="pay-option" data-method="tarjeta">
+                  <span class="pay-cn">卡片</span>
+                  <span class="pay-name">Tarjeta</span>
+                </button>
+                <button type="button" class="pay-option" data-method="qr">
+                  <span class="pay-cn">扫码</span>
+                  <span class="pay-name">Pago QR</span>
+                </button>
+                <button type="button" class="pay-option" data-method="mixto">
+                  <span class="pay-cn">混合</span>
+                  <span class="pay-name">Mixto</span>
+                </button>
+              </div>
+
+              <!-- Efectivo panel -->
+              <div id="cashPanel" class="pay-panel">
+                <div>
+                  <label class="field-label">Monto recibido</label>
+                  <div class="input-wrap">
+                    <span class="input-prefix">$</span>
+                    <input id="received" type="number" step="0.01" min="0" class="input-clean has-prefix" placeholder="0.00" inputmode="decimal" />
+                  </div>
+                </div>
+                <div class="quick-cash" id="quickCash">
+                  <button type="button" data-amt="10">$10</button>
+                  <button type="button" data-amt="20">$20</button>
+                  <button type="button" data-amt="50">$50</button>
+                  <button type="button" data-amt="100">$100</button>
+                  <button type="button" data-amt="exact">Exacto</button>
+                </div>
+                <div class="change-box">
+                  <span>Cambio a entregar</span>
+                  <strong id="change">$0.00</strong>
+                </div>
+              </div>
+
+              <!-- QR panel -->
+              <div id="qrPanel" style="display:none;">
+                <div class="qr-panel">
+                  <img src="qrcode-1776800068835.svg" alt="QR de pago" onerror="this.style.display='none'" />
+                  <p class="muted-sm">Escanea el código para pagar</p>
+                  <span class="chip" id="qrTotal">$0.00</span>
+                </div>
+              </div>
+
+              <!-- Mixto panel -->
+              <div id="mixtoPanel" style="display:none;">
+                <div class="pay-panel">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+                    <div>
+                      <label class="field-label">Efectivo</label>
+                      <div class="input-wrap">
+                        <span class="input-prefix">$</span>
+                        <input id="mixEfectivo" type="number" step="0.01" min="0" class="input-clean has-prefix" placeholder="0.00" inputmode="decimal" />
+                      </div>
+                    </div>
+                    <div>
+                      <label class="field-label">Tarjeta / QR</label>
+                      <div class="input-wrap">
+                        <span class="input-prefix">$</span>
+                        <input id="mixTarjeta" type="number" step="0.01" min="0" class="input-clean has-prefix" placeholder="0.00" inputmode="decimal" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="change-box">
+                    <span>Cambio efectivo</span>
+                    <strong id="mixChange">$0.00</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Discount & notes card -->
+          <div class="card">
+            <div class="card-body">
+              <p class="caja-section-label">Descuento y notas</p>
+              <div class="discount-row">
+                <div class="field-group">
+                  <label class="field-label">Descuento (%)</label>
+                  <input id="discount" type="number" min="0" max="100" step="1" class="input-clean" placeholder="0" inputmode="numeric" />
+                </div>
+                <div class="field-group" style="flex:2;">
+                  <label class="field-label">Notas del pedido</label>
+                  <input id="notes" class="input-clean" placeholder="Para llevar, sin cebolla..." />
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /caja-left -->
+
+        <!-- ====== RIGHT PANEL ====== -->
+        <aside class="caja-right">
+          <div class="pay-summary">
+            <div class="big-total-wrap">
+              <p class="big-total-label">Total a cobrar</p>
+              <p class="big-total" id="bigTotal">$0.00</p>
+              <p class="big-total-method" id="paySummaryMethod">Pago: Efectivo</p>
+            </div>
+
+            <div class="info-rows">
+              <div class="info-row">
+                <span>Cajero</span>
+                <span id="cashierName">—</span>
+              </div>
+              <div class="info-row">
+                <span>Caja</span>
+                <span id="registerName">—</span>
+              </div>
+              <div class="info-row">
+                <span>Turno</span>
+                <span id="shiftName">—</span>
+              </div>
+              <div class="info-row">
+                <span>Pedido</span>
+                <span id="orderIdRight">—</span>
+              </div>
+              <div class="info-row">
+                <span>Items</span>
+                <span id="itemCount">—</span>
+              </div>
+            </div>
+
+            <div class="thanks" style="margin-top:auto;padding-top:1rem;">
+              非常感谢 · Gracias
+            </div>
+          </div>
+
+          <div class="caja-right__actions">
+            <button id="payBtn" class="btn-primary full">
+              Cobrar e imprimir
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"/>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                <rect x="6" y="14" width="12" height="8"/>
+              </svg>
+            </button>
+            <button id="cancelBtn" class="btn-ghost full">
+              ← Cancelar pedido
+            </button>
+          </div>
+        </aside>
+
+      </div>
+    </div><!-- /content-area -->
+  </div><!-- /main-area -->
+</div><!-- /app-shell -->
+
+<!-- ====== SUCCESS MODAL ====== -->
+<div id="successModal" class="modal-overlay" hidden>
+  <div class="modal-card">
+    <div class="success-icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <p class="modal-cn">完了</p>
+    <h3 class="modal-title">Pago realizado</h3>
+    <p class="muted-sm" id="modalSummary">Pedido cobrado correctamente.</p>
+
+    <div class="modal-receipt" id="modalReceipt"></div>
+
+    <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:1.25rem;">
+      <button id="modalClose" class="btn-primary full">
+        Nuevo pedido
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+      <button id="modalPrint" class="btn-ghost full">
+        🖨 Imprimir comprobante
+      </button>
+    </div>
+
+    <p class="thanks" style="margin-top:1rem;">非常感谢 · Gracias por su preferencia</p>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Techos Rojos POS — Caja · caja.js integrado
+   ============================================================ */
+
+const state = {
+  method: 'efectivo',
+  received: 0,
+  mixEfectivo: 0,
+  mixTarjeta: 0,
+  discount: 0,
+  order: [],
+  shiftData: {},
+  orderId: '—',
+};
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+const fmt = (n) => `$${n.toFixed(2)}`;
+
+/* ── Load data ───────────────────────────────────────────────── */
+function loadData() {
+  // Order
+  const orderData = JSON.parse(localStorage.getItem('tr_order') || 'null');
+  if (orderData) {
+    state.order = orderData.items || [];
+    state.orderId = orderData.id || '—';
+    $('#orderId').textContent = `#${orderData.id}`;
+    $('#orderIdRight').textContent = `#${orderData.id}`;
+  }
+
+  // Shift
+  state.shiftData = JSON.parse(localStorage.getItem('tr_shift') || '{}');
+  $('#cashierName').textContent = state.shiftData.cashier || '—';
+  $('#registerName').textContent = state.shiftData.register || '—';
+  $('#shiftName').textContent = state.shiftData.turnType || '—';
+
+  // Items count
+  const totalItems = state.order.reduce((s, i) => s + i.qty, 0);
+  $('#itemCount').textContent = totalItems + ' producto' + (totalItems !== 1 ? 's' : '');
+}
+
+/* ── Date ────────────────────────────────────────────────────── */
+function renderDate() {
+  $('#todayDate').textContent = new Date().toLocaleDateString('es-CO', {
+    weekday: 'short', day: 'numeric', month: 'short'
+  });
+}
+
+/* ── Render order ────────────────────────────────────────────── */
+function renderOrder() {
+  const list = $('#orderList');
+  if (!state.order.length) {
+    list.innerHTML = '<li style="color:var(--muted);font-size:.875rem;padding:.5rem 0;">Sin productos.</li>';
+    return;
+  }
+  list.innerHTML = '';
+  state.order.forEach(i => {
+    const li = document.createElement('li');
+    li.className = 'order-item';
+    li.innerHTML = `
+      <div class="order-qty">${i.qty}×</div>
+      <div>
+        <p class="order-name">${i.name}</p>
+        <p class="order-meta">${i.cn || ''} · ${fmt(i.price)}</p>
+      </div>
+      <span class="order-price">${fmt(i.price * i.qty)}</span>
+    `;
+    list.appendChild(li);
+  });
+}
+
+/* ── Calc totals ─────────────────────────────────────────────── */
+function calcTotals() {
+  const subtotal = state.order.reduce((s, i) => s + i.price * i.qty, 0);
+  const discountAmt = subtotal * (state.discount / 100);
+  const taxable = subtotal - discountAmt;
+  const tax = taxable * 0.10;
+  const total = taxable + tax;
+  return { subtotal, discountAmt, tax, total };
+}
+
+function renderTotals() {
+  const { subtotal, discountAmt, tax, total } = calcTotals();
+  $('#subtotal').textContent = fmt(subtotal);
+  $('#discountRow').textContent = `- ${fmt(discountAmt)}`;
+  $('#tax').textContent = fmt(tax);
+  $('#total').textContent = fmt(total);
+  $('#bigTotal').textContent = fmt(total);
+  $('#qrTotal').textContent = fmt(total);
+  renderChange();
+}
+
+/* ── Payment methods ─────────────────────────────────────────── */
+function bindPayMethods() {
+  $$('.pay-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('.pay-option').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.method = btn.dataset.method;
+
+      const labels = { efectivo:'Efectivo', tarjeta:'Tarjeta', qr:'Pago QR', mixto:'Mixto' };
+      $('#paySummaryMethod').textContent = 'Pago: ' + labels[state.method];
+
+      // Show/hide panels
+      $('#cashPanel').style.display = state.method === 'efectivo' ? '' : 'none';
+      $('#qrPanel').style.display = state.method === 'qr' ? '' : 'none';
+      $('#mixtoPanel').style.display = state.method === 'mixto' ? '' : 'none';
+    });
+  });
+}
+
+/* ── Change calculation ──────────────────────────────────────── */
+function renderChange() {
+  const { total } = calcTotals();
+  const change = Math.max(0, state.received - total);
+  $('#change').textContent = fmt(change);
+  $('#change').style.color = state.received >= total ? 'var(--red)' : 'var(--ink-soft)';
+
+  // Mixto change
+  if (state.method === 'mixto') {
+    const mixChange = Math.max(0, state.mixEfectivo - (total - state.mixTarjeta));
+    $('#mixChange').textContent = fmt(mixChange);
+  }
+}
+
+function bindCash() {
+  $('#received').addEventListener('input', e => {
+    state.received = parseFloat(e.target.value) || 0;
+    renderChange();
+  });
+
+  // Quick cash buttons
+  $('#quickCash').querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      const { total } = calcTotals();
+      state.received = b.dataset.amt === 'exact' ? total : parseFloat(b.dataset.amt);
+      $('#received').value = state.received.toFixed(2);
+      renderChange();
+    });
+  });
+
+  // Mixto inputs
+  $('#mixEfectivo').addEventListener('input', e => {
+    state.mixEfectivo = parseFloat(e.target.value) || 0;
+    renderChange();
+  });
+  $('#mixTarjeta').addEventListener('input', e => {
+    state.mixTarjeta = parseFloat(e.target.value) || 0;
+    renderChange();
+  });
+}
+
+/* ── Discount ────────────────────────────────────────────────── */
+function bindDiscount() {
+  $('#discount').addEventListener('input', e => {
+    let v = Math.max(0, Math.min(100, parseFloat(e.target.value) || 0));
+    state.discount = v;
+    renderTotals();
+  });
+}
+
+/* ── Validation ──────────────────────────────────────────────── */
+function validatePayment() {
+  const { total } = calcTotals();
+
+  if (state.method === 'efectivo') {
+    if (state.received < total) {
+      alert(`Monto insuficiente. Faltan ${fmt(total - state.received)}.`);
+      return false;
+    }
+  }
+
+  if (state.method === 'mixto') {
+    const sum = state.mixEfectivo + state.mixTarjeta;
+    if (sum < total) {
+      alert(`Monto mixto insuficiente. Faltan ${fmt(total - sum)}.`);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/* ── Build receipt for modal ─────────────────────────────────── */
+function buildReceipt(total) {
+  const receipt = $('#modalReceipt');
+  const change = state.method === 'efectivo' ? Math.max(0, state.received - total) : 0;
+  const labels = { efectivo:'Efectivo', tarjeta:'Tarjeta', qr:'Pago QR', mixto:'Mixto' };
+
+  receipt.innerHTML = `
+    <div class="receipt-row"><span>Pedido</span><span>#${state.orderId}</span></div>
+    <div class="receipt-row"><span>Cajero</span><span>${state.shiftData.cashier || '—'}</span></div>
+    <div class="receipt-row"><span>Método</span><span>${labels[state.method]}</span></div>
+    ${state.method === 'efectivo' ? `<div class="receipt-row"><span>Recibido</span><span>${fmt(state.received)}</span></div>
+    <div class="receipt-row"><span>Cambio</span><span>${fmt(change)}</span></div>` : ''}
+    <div class="receipt-row"><span>Total</span><span>${fmt(total)}</span></div>
+  `;
+}
+
+/* ── Pay button ──────────────────────────────────────────────── */
+function bindPay() {
+  $('#payBtn').addEventListener('click', () => {
+    if (!validatePayment()) return;
+    const { total } = calcTotals();
+
+    // Clear order from storage
+    localStorage.removeItem('tr_order');
+
+    // Build modal
+    const labels = { efectivo:'Efectivo', tarjeta:'Tarjeta', qr:'Pago QR', mixto:'Mixto' };
+    $('#modalSummary').textContent = `Pedido #${state.orderId} cobrado correctamente (${labels[state.method]}).`;
+    buildReceipt(total);
+
+    // Show modal
+    $('#successModal').hidden = false;
+  });
+
+  $('#modalClose').addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+
+  $('#modalPrint').addEventListener('click', () => {
+    window.print();
+  });
+
+  $('#cancelBtn').addEventListener('click', () => {
+    if (confirm('¿Cancelar el pedido y volver al inicio?')) {
+      localStorage.removeItem('tr_order');
+      window.location.href = 'index.html';
+    }
+  });
+}
+
+/* ── Init ────────────────────────────────────────────────────── */
+function init() {
+  renderDate();
+  loadData();
+  renderOrder();
+  renderTotals();
+  bindPayMethods();
+  bindCash();
+  bindDiscount();
+  bindPay();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
