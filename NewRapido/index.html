@@ -967,7 +967,19 @@ function init() {
   initCheckout();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+
+  const hash = window.location.hash;
+
+  if (hash === '#view-productos') {
+    showView('productos');
+    setStepper(2);
+    renderCategories();
+    renderProducts();
+    renderCart();
+  }
+});
 </script>
 </body>
 </html>

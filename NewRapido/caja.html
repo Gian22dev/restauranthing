@@ -23,10 +23,10 @@
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 1.5rem;
+      padding: 0.75rem 1rem;
       display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
+      flex-direction: row;
+      gap: 0.75rem;
       min-width: 0;
     }
 
@@ -37,56 +37,56 @@
       text-transform: uppercase;
       color: var(--muted);
       font-family: var(--font-ui);
-      margin-bottom: .75rem;
+      margin-bottom: 0.4rem;
     }
 
     /* Order summary */
     .order-list {
       display: flex;
       flex-direction: column;
-      gap: .5rem;
+      gap: 0.25rem;
     }
 
     .order-item {
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: .875rem;
-      padding: .75rem;
+      gap: 0.5rem;
+      padding: 0.4rem 0;
       border-bottom: 1px solid var(--border-light);
     }
 
     .order-item:last-child { border-bottom: none; }
 
     .order-qty {
-      width: 32px; height: 32px;
+      width: 26px; height: 26px;
       background: var(--red-soft);
       color: var(--red);
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: .8rem;
+      font-size: 0.7rem;
       font-weight: 700;
       font-family: var(--font-ui);
       flex-shrink: 0;
     }
 
     .order-name {
-      font-size: .875rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--ink);
     }
 
     .order-meta {
-      font-size: .72rem;
+      font-size: 0.65rem;
       color: var(--muted);
       font-family: var(--font-ui);
-      margin-top: .1rem;
+      margin-top: 0;
     }
 
     .order-price {
-      font-size: .9rem;
+      font-size: 0.8rem;
       font-weight: 700;
       color: var(--ink);
       white-space: nowrap;
@@ -96,22 +96,22 @@
     .pay-methods {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: .75rem;
+      gap: 0.5rem;
     }
 
     .pay-option {
       border: 1.5px solid var(--border-light);
       background: var(--bg);
       border-radius: var(--radius);
-      padding: .875rem .5rem;
+      padding: 0.5rem 0.3rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: .375rem;
+      gap: 0.2rem;
       transition: var(--transition);
       cursor: pointer;
       touch-action: manipulation;
-      min-height: 80px;
+      min-height: 60px;
     }
 
     .pay-option:hover { border-color: rgba(180,24,0,.4); }
@@ -123,13 +123,13 @@
 
     .pay-cn {
       font-family: var(--font-display);
-      font-size: 1.2rem;
+      font-size: 0.95rem;
       color: var(--red);
       line-height: 1;
     }
 
     .pay-name {
-      font-size: .78rem;
+      font-size: 0.7rem;
       color: var(--ink-soft);
       font-weight: 600;
       font-family: var(--font-ui);
@@ -142,13 +142,13 @@
     .pay-panel {
       display: flex;
       flex-direction: column;
-      gap: .75rem;
+      gap: 0.5rem;
     }
 
     .quick-cash {
       display: flex;
       flex-wrap: wrap;
-      gap: .5rem;
+      gap: 0.35rem;
     }
 
     .quick-cash button {
@@ -207,7 +207,7 @@
     /* Discount row */
     .discount-row {
       display: flex;
-      gap: 1rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
     }
 
@@ -353,6 +353,14 @@
       margin-bottom: .25rem;
     }
 
+
+.card-body{
+  width: 100%;
+}
+
+.card{
+  width: 50%;
+}
     .modal-title {
       font-family: var(--font-display);
       font-size: 1.5rem;
@@ -499,25 +507,18 @@
         <div class="caja-left">
 
           <!-- Header text -->
-          <div>
-            <p class="eyebrow">Cobro · 会计</p>
-            <h2 class="display-title">
-              Cierra con precisión,<br>
-              <span class="accent">despide con gracia.</span>
-            </h2>
-          </div>
 
           <!-- Order summary card -->
           <div class="card">
-            <div class="card-body" style="padding-bottom:1rem;">
+            <div class="card-body" style="padding-bottom:0.6rem;">
               <div class="row-between mb-5">
                 <h3 class="section-title">Resumen del pedido</h3>
                 <span class="chip" id="orderId">—</span>
               </div>
               <ul class="order-list" id="orderList">
-                <li style="color:var(--muted);font-size:.875rem;padding:.5rem 0;">Sin productos.</li>
+                <li style="color:var(--muted);font-size:.875rem;padding:.3rem 0;">Sin productos.</li>
               </ul>
-              <div class="divider" style="margin:.75rem 0;"></div>
+              <div class="divider" style="margin:.4rem 0;"></div>
               <div class="totals">
                 <div class="total-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
                 <div class="total-row"><span>Descuento</span><span id="discountRow">- $0.00</span></div>
@@ -611,21 +612,7 @@
           </div>
 
           <!-- Discount & notes card -->
-          <div class="card">
-            <div class="card-body">
-              <p class="caja-section-label">Descuento y notas</p>
-              <div class="discount-row">
-                <div class="field-group">
-                  <label class="field-label">Descuento (%)</label>
-                  <input id="discount" type="number" min="0" max="100" step="1" class="input-clean" placeholder="0" inputmode="numeric" />
-                </div>
-                <div class="field-group" style="flex:2;">
-                  <label class="field-label">Notas del pedido</label>
-                  <input id="notes" class="input-clean" placeholder="Para llevar, sin cebolla..." />
-                </div>
-              </div>
-            </div>
-          </div>
+          
 
         </div><!-- /caja-left -->
 
@@ -675,9 +662,12 @@
                 <rect x="6" y="14" width="12" height="8"/>
               </svg>
             </button>
-            <button id="cancelBtn" class="btn-ghost full">
-              ← Cancelar pedido
-            </button>
+            <a href="./index.html#view-productos">
+              <button type="button" id="cancelBtn" class="btn-ghost full">
+                ← Cancelar pedido
+              </button>
+            </a>
+
           </div>
         </aside>
 
