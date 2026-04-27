@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Techos Rojos – Caja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════
+       TOKENS — idénticos a mesas/index.html
+    ═══════════════════════════════════════════ */
+    :root {
+      --red:        #b41800;
+      --red-hover:  #961400;
+      --red-dark:   #7e1100;
+      --red-soft:   #fae8e5;
+      --red-ghost:  rgba(180,24,0,.08);
+      --red-glow:   rgba(180,24,0,.15);
+
+      --bg:         #ffffff;
+      --bg-soft:    #fdfaf9;
+      --bg-muted:   #f5f0ee;
+      --bg-warm:    #faf6f4;
+
+      --ink:        #1a1208;
+      --ink-soft:   #4a4038;
+      --muted:      #9a8f89;
+      --border:     rgba(180,24,0,.18);
+      --border-light: rgba(180,24,0,.10);
+
+      --green:      #1a7a4a;
+      --green-soft: #e8f5ee;
+      --amber:      #c47a00;
+      --amber-soft: #fff3db;
+      --danger:     #b41800;
+
+      --radius:     12px;
+      --radius-lg:  18px;
+      --radius-xl:  26px;
+      --shadow-sm:  0 1px 4px rgba(60,20,10,.07);
+      --shadow-md:  0 6px 22px rgba(60,20,10,.11);
+      --shadow-lg:  0 18px 52px rgba(60,20,10,.16);
+      --t:          .2s cubic-bezier(.4,0,.2,1);
+
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-soft);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* ─── LAYOUT ──────────────────────────────────── */
+    .app { display:flex; height:100vh; }
+
+    /* ─── SIDEBAR ─────────────────────────────────── */
+    .sidebar {
+      width: 220px; height: 100vh;
+      background: var(--red);
+      display: flex; flex-direction: column;
+      padding: 1.25rem;
+      z-index: 50; overflow: hidden; flex-shrink: 0;
+    }
+    .brand {
+      display: flex; align-items: center; gap: .75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      margin-bottom: 1.25rem; flex-shrink: 0;
+    }
+    .logo {
+      width: 44px; height: 44px;
+      background: white; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; overflow: hidden;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.3rem; color: var(--red); font-weight: 700;
+    }
+    .brand h3 { font-size: .9rem; font-weight: 700; color: white; line-height: 1.2; margin: 0; }
+    .brand span { font-size: .72rem; color: rgba(255,255,255,.7); display: block; }
+    nav { display:flex; flex-direction:column; gap:.3rem; flex:1; }
+    nav a {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .75rem 1rem; border-radius: 12px;
+      font-size: .875rem; font-weight: 600;
+      color: rgba(255,255,255,.75);
+      transition: var(--t);
+      font-family: 'Quicksand', sans-serif;
+      min-height: 44px; text-decoration: none; cursor: pointer;
+    }
+    nav a:hover { background: rgba(255,255,255,.12); color: white; }
+    nav a.active { background: white; color: var(--red); box-shadow: var(--shadow-md); }
+    .sidebar-footer { margin-top: auto; }
+    .logout-btn {
+      width: 100%; background: rgba(255,255,255,0.1);
+      border: none; color: white; cursor: pointer;
+      padding: 12px; border-radius: var(--radius);
+      font-weight: 500; font-family: var(--font-body);
+      font-size: .875rem; transition: background 0.2s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.2); }
+
+    /* ─── MAIN ────────────────────────────────────── */
+    .main { flex:1; display:flex; flex-direction:column; overflow:hidden; background: var(--bg-soft); }
+
+    /* ─── TOPBAR ──────────────────────────────────── */
+    .topbar {
+      background:var(--bg); border-bottom:1px solid var(--border-light);
+      padding: 16px 28px;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      flex-shrink:0;
+    }
+    .topbar-left { display:flex; align-items:baseline; gap:14px; }
+    .topbar h1 { font-family:var(--font-display); font-size:26px; font-weight:700; color:var(--ink); }
+    .stats-pills { display:flex; gap:8px; }
+    .pill {
+      display:inline-flex; align-items:center; gap:5px;
+      padding:4px 10px; border-radius:20px;
+      font-size:12px; font-weight:600; border:1px solid transparent;
+    }
+    .pill.open-pill  { background:var(--green-soft); color:var(--green); border-color:rgba(26,122,74,.2); }
+    .pill.closed-pill { background:var(--bg-muted); color:var(--muted); border-color:var(--border-light); }
+    .pill-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+    .topbar-actions { display:flex; gap:8px; align-items:center; }
+
+    /* ─── BUTTONS (mismo sistema) ─────────────────── */
+    .btn {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:9px 16px; border-radius:var(--radius);
+      font-size:13px; font-weight:600; font-family:var(--font-body);
+      cursor:pointer; border:none; transition:var(--t);
+    }
+    .btn-primary { background:var(--red); color:white; }
+    .btn-primary:hover:not(:disabled) { background:var(--red-hover); box-shadow:var(--shadow-md); }
+    .btn-success { background:var(--green); color:white; }
+    .btn-success:hover:not(:disabled) { background:#156b3e; box-shadow:var(--shadow-md); }
+    .btn-outline { background:transparent; border:1px solid var(--border); color:var(--ink-soft); }
+    .btn-outline:hover:not(:disabled) { background:var(--red-ghost); color:var(--red); border-color:var(--red); }
+    .btn-danger { background:var(--red-soft); color:var(--red); border:1px solid rgba(180,24,0,.2); }
+    .btn-danger:hover:not(:disabled) { background:var(--red); color:white; }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+    .btn-sm { padding:6px 12px; font-size:12px; border-radius:var(--radius); }
+    .btn .icon { font-size:14px; }
+
+    /* ─── SCROLL AREA ─────────────────────────────── */
+    .scroll-area {
+      flex:1; overflow-y:auto; padding: 24px 28px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .scroll-area::-webkit-scrollbar { width:5px; }
+    .scroll-area::-webkit-scrollbar-track { background:transparent; }
+    .scroll-area::-webkit-scrollbar-thumb { background:var(--border); border-radius:10px; }
+
+    /* ─── ESTADO CAJA CERRADA ─────────────────────── */
+    .caja-cerrada-banner {
+      background: var(--bg);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-xl);
+      padding: 48px 32px;
+      text-align: center;
+    }
+    .caja-cerrada-banner .banner-icon { font-size: 52px; margin-bottom: 16px; display:block; opacity:.6; }
+    .caja-cerrada-banner h2 { font-family:var(--font-display); font-size:22px; color:var(--ink); margin-bottom:8px; }
+    .caja-cerrada-banner p { font-size:14px; color:var(--muted); margin-bottom:24px; }
+
+    /* ─── CARDS DE RESUMEN ────────────────────────── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+    }
+    .summary-card {
+      background: var(--bg);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      transition: var(--t);
+    }
+    .summary-card:hover { box-shadow: var(--shadow-md); border-color: var(--border); }
+    .summary-card .sc-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .summary-card .sc-value {
+      font-family: var(--font-mono);
+      font-size: 20px; font-weight: 700;
+      color: var(--ink);
+    }
+    .summary-card .sc-value.positive { color: var(--green); }
+    .summary-card .sc-value.negative { color: var(--red); }
+    .summary-card .sc-value.neutral  { color: var(--amber); }
+    .summary-card .sc-sub {
+      font-size: 11px; color: var(--muted); margin-top: 4px;
+    }
+    .summary-card.highlight {
+      background: var(--red);
+      border-color: var(--red-dark);
+    }
+    .summary-card.highlight .sc-label { color: rgba(255,255,255,.7); }
+    .summary-card.highlight .sc-value { color: white; }
+    .summary-card.highlight .sc-sub   { color: rgba(255,255,255,.6); }
+
+    /* ─── DOS COLUMNAS ────────────────────────────── */
+    .two-cols { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    @media (max-width:900px) { .two-cols { grid-template-columns:1fr; } }
+
+    /* ─── PANEL / SECCIÓN ─────────────────────────── */
+    .panel {
+      background: var(--bg);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .panel-header h3 {
+      font-size: 14px; font-weight: 700; color: var(--ink);
+    }
+    .panel-header .section-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); margin-bottom: 2px;
+    }
+    .panel-body { padding: 16px 20px; }
+
+    /* ─── MÉTODOS DE PAGO ─────────────────────────── */
+    .metodos-list { display:flex; flex-direction:column; gap:10px; }
+    .metodo-row {
+      display: flex; align-items: center; gap:12px;
+    }
+    .metodo-label {
+      flex:1; font-size:13px; font-weight:600; color:var(--ink-soft);
+      display:flex; align-items:center; gap:8px;
+    }
+    .metodo-icon { font-size:16px; }
+    .metodo-amount {
+      font-family: var(--font-mono);
+      font-size: 14px; font-weight: 700; color: var(--green);
+      min-width: 90px; text-align: right;
+    }
+    .metodo-bar-wrap {
+      width: 100%; height: 6px; background: var(--bg-muted);
+      border-radius: 10px; overflow:hidden; margin-top: 4px;
+    }
+    .metodo-bar { height:100%; border-radius:10px; background:var(--green); transition:width .5s ease; }
+
+    /* ─── MOVIMIENTOS ─────────────────────────────── */
+    .movimientos-list { display:flex; flex-direction:column; }
+    .movimiento-row {
+      display:flex; align-items:center; gap:12px;
+      padding:10px 0;
+      border-bottom:1px solid var(--border-light);
+    }
+    .movimiento-row:last-child { border-bottom:none; }
+    .mov-icon {
+      width:34px; height:34px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:16px; flex-shrink:0;
+    }
+    .mov-icon.ingreso  { background:var(--green-soft); }
+    .mov-icon.egreso   { background:var(--red-soft); }
+    .mov-icon.apertura { background:var(--amber-soft); }
+    .mov-info { flex:1; }
+    .mov-desc { font-size:13px; font-weight:600; color:var(--ink); }
+    .mov-meta { font-size:11px; color:var(--muted); margin-top:1px; }
+    .mov-amount {
+      font-family:var(--font-mono); font-size:14px; font-weight:700;
+    }
+    .mov-amount.ingreso  { color:var(--green); }
+    .mov-amount.egreso   { color:var(--red); }
+    .mov-amount.apertura { color:var(--amber); }
+
+    /* ─── FORM INPUTS ─────────────────────────────── */
+    .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+    .form-label { font-size:12px; font-weight:600; color:var(--ink-soft); }
+    .form-input {
+      padding:9px 12px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      font-size:13px; color:var(--ink);
+      background:var(--bg-muted);
+      font-family:var(--font-body);
+      outline:none; transition:var(--t);
+    }
+    .form-input:focus { border-color:var(--red); box-shadow:0 0 0 3px var(--red-ghost); background:var(--bg); }
+    .form-input.mono { font-family:var(--font-mono); }
+    .form-select {
+      padding:9px 12px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      font-size:13px; color:var(--ink);
+      background:var(--bg-muted);
+      font-family:var(--font-body);
+      outline:none; cursor:pointer; transition:var(--t);
+      appearance:none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a8f89' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+    .form-select:focus { border-color:var(--red); box-shadow:0 0 0 3px var(--red-ghost); }
+
+    /* ─── ARQUEO COMPARISON ───────────────────────── */
+    .arqueo-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 0;
+      border-bottom:1px solid var(--border-light);
+    }
+    .arqueo-row:last-child { border-bottom:none; }
+    .arqueo-label { font-size:13px; color:var(--ink-soft); }
+    .arqueo-value { font-family:var(--font-mono); font-size:14px; font-weight:700; color:var(--ink); }
+    .arqueo-diff.ok       { color:var(--green); }
+    .arqueo-diff.warning  { color:var(--amber); }
+    .arqueo-diff.danger   { color:var(--red); }
+    .arqueo-result-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 14px; border-radius:20px;
+      font-size:12px; font-weight:700;
+    }
+    .arqueo-result-badge.ok      { background:var(--green-soft); color:var(--green); }
+    .arqueo-result-badge.warning { background:var(--amber-soft);  color:var(--amber); }
+    .arqueo-result-badge.danger  { background:var(--red-soft);    color:var(--red); }
+
+    /* ─── MODAL OVERLAY ───────────────────────────── */
+    .overlay {
+      position:fixed; inset:0;
+      background:rgba(10,5,0,.5);
+      backdrop-filter:blur(4px);
+      display:flex; align-items:center; justify-content:center;
+      z-index:100; padding:20px;
+      animation:fadeIn .15s ease;
+    }
+    .overlay.hidden { display:none; }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .modal {
+      background:var(--bg);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow-lg);
+      border:1px solid var(--border-light);
+      width:min(500px,100%);
+      max-height:90vh; overflow-y:auto;
+      animation:slideUp .2s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:none;opacity:1} }
+    .modal-header {
+      padding:22px 24px 18px;
+      border-bottom:1px solid var(--border-light);
+      display:flex; justify-content:space-between; align-items:flex-start; gap:16px;
+      position:sticky; top:0; background:var(--bg); z-index:1;
+    }
+    .modal-title { font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+    .modal-subtitle { font-size:13px; color:var(--muted); }
+    .modal-close {
+      width:32px; height:32px; border:none; background:var(--bg-muted);
+      border-radius:50%; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; color:var(--ink-soft); transition:var(--t); flex-shrink:0;
+    }
+    .modal-close:hover { background:var(--red-soft); color:var(--red); }
+    .modal-body { padding:24px; }
+    .modal-footer {
+      padding:16px 24px;
+      border-top:1px solid var(--border-light);
+      display:flex; justify-content:flex-end; gap:8px;
+    }
+
+    /* ─── TOAST ───────────────────────────────────── */
+    .toast-container {
+      position:fixed; top:20px; right:20px;
+      display:flex; flex-direction:column; gap:8px; z-index:999;
+    }
+    .toast {
+      background:var(--ink); color:white;
+      padding:10px 16px; border-radius:var(--radius);
+      font-size:13px; font-weight:500; box-shadow:var(--shadow-lg);
+      animation:toastIn .25s ease, toastOut .3s ease 2.7s forwards;
+      display:flex; align-items:center; gap:8px;
+    }
+    .toast.success { background:var(--green); }
+    .toast.warning { background:var(--amber); }
+    .toast.error   { background:var(--red); }
+    @keyframes toastIn  { from{transform:translateX(20px);opacity:0} to{transform:none;opacity:1} }
+    @keyframes toastOut { to{transform:translateX(20px);opacity:0} }
+
+    /* ─── SECTION LABEL ───────────────────────────── */
+    .section-label {
+      font-size:11px; font-weight:700;
+      text-transform:uppercase; letter-spacing:.08em;
+      color:var(--muted); margin-bottom:10px;
+    }
+    .divider { border:none; border-top:1px solid var(--border-light); margin:16px 0; }
+    .hidden { display:none !important; }
+
+    /* ─── CIERRE DETALLE ──────────────────────────── */
+    .cierre-totals {
+      background: var(--bg-muted);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .cierre-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding: 6px 0;
+      font-size: 13px;
+    }
+    .cierre-row.total-row {
+      border-top: 1px solid var(--border);
+      margin-top: 8px; padding-top: 12px;
+      font-weight: 700; font-size: 15px;
+    }
+    .cierre-row .label { color: var(--ink-soft); }
+    .cierre-row .value { font-family:var(--font-mono); font-weight:700; color:var(--ink); }
+    .cierre-row.total-row .value { color: var(--red); font-size:18px; }
+
+    /* ─── EMPTY PANEL ─────────────────────────────── */
+    .empty-panel {
+      text-align:center; padding:32px 20px; color:var(--muted);
+    }
+    .empty-panel .ep-icon { font-size:36px; opacity:.45; margin-bottom:10px; display:block; }
+    .empty-panel p { font-size:13px; }
+
+    /* ─── EGRESO CHIP ─────────────────────────────── */
+    .tipo-chip {
+      display:inline-flex; align-items:center; gap:5px;
+      padding:3px 10px; border-radius:20px;
+      font-size:11px; font-weight:600;
+    }
+    .tipo-chip.ingreso  { background:var(--green-soft); color:var(--green); }
+    .tipo-chip.egreso   { background:var(--red-soft);   color:var(--red); }
+  </style>
+</head>
+<body>
+
+<!-- Kanjis decorativos -->
+<span style="position:fixed;top:2rem;left:2rem;font-size:8rem;line-height:1;color:hsla(10,80%,55%,.08);font-weight:700;user-select:none;z-index:0;pointer-events:none;font-family:'Noto Serif SC',serif;">紅</span>
+<span style="position:fixed;bottom:3rem;right:3rem;font-size:6rem;line-height:1;color:hsla(10,80%,55%,.08);font-weight:700;user-select:none;z-index:0;pointer-events:none;font-family:'Noto Serif SC',serif;">屋</span>
+
+<div class="app">
+  <!-- ── SIDEBAR ─────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">麺</div>
+      <div>
+        <h3>SAKURA</h3>
+        <span>Administrador</span>
+      </div>
+    </div>
+    <nav>
+      <a href="#">Mesas</a>
+      <a href="#">Rapido</a>
+      <a href="#">Domicilios</a>
+      <a class="active" href="#">Caja</a>
+      <a href="#">Inventario</a>
+      <a href="#">Historial</a>
+      <a href="#">Menú</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ───────────────────────────────── -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>Caja</h1>
+        <div class="stats-pills">
+          <span class="pill open-pill" id="pill-estado">
+            <span class="pill-dot"></span>
+            <span id="pill-texto">Cerrada</span>
+          </span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-outline" id="btn-movimiento" disabled>
+          <span class="icon">↕</span> Movimiento
+        </button>
+        <button class="btn btn-danger" id="btn-cierre" disabled>
+          <span class="icon">🔒</span> Cerrar caja
+        </button>
+        <button class="btn btn-primary" id="btn-apertura">
+          <span class="icon">🔓</span> Abrir caja
+        </button>
+      </div>
+    </div>
+
+    <!-- Scroll area -->
+    <div class="scroll-area" id="scroll-area">
+
+      <!-- ESTADO: CAJA CERRADA -->
+      <div id="vista-cerrada" class="caja-cerrada-banner">
+        <span class="banner-icon">🏦</span>
+        <h2>La caja está cerrada</h2>
+        <p>Abre la caja para comenzar a registrar ventas y movimientos del día.</p>
+        <button class="btn btn-primary" id="btn-apertura-banner">
+          <span class="icon">🔓</span> Abrir caja ahora
+        </button>
+      </div>
+
+      <!-- ESTADO: CAJA ABIERTA (hidden por defecto) -->
+      <div id="vista-abierta" class="hidden">
+
+        <!-- Resumen rápido -->
+        <div class="summary-grid" id="summary-grid">
+          <!-- Generado por JS -->
+        </div>
+
+        <!-- Dos columnas: métodos + movimientos -->
+        <div class="two-cols">
+
+          <!-- Métodos de pago -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="section-label">Desglose</div>
+                <h3>Métodos de pago</h3>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="metodos-list" id="metodos-list"></div>
+            </div>
+          </div>
+
+          <!-- Movimientos del día -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="section-label">Registro</div>
+                <h3>Movimientos</h3>
+              </div>
+              <span id="mov-count" style="font-size:12px;color:var(--muted)">0</span>
+            </div>
+            <div class="panel-body">
+              <div class="movimientos-list" id="movimientos-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arqueo / comparación -->
+        <div class="panel" id="panel-arqueo">
+          <div class="panel-header">
+            <div>
+              <div class="section-label">Arqueo</div>
+              <h3>Comparación en tiempo real</h3>
+            </div>
+            <span id="arqueo-badge" class="arqueo-result-badge ok">✓ Cuadra</span>
+          </div>
+          <div class="panel-body">
+            <div id="arqueo-body"></div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /vista-abierta -->
+
+    </div>
+    <!-- /scroll-area -->
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  MODAL: APERTURA DE CAJA                   -->
+<!-- ══════════════════════════════════════════ -->
+<div class="overlay hidden" id="modal-apertura-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Abrir caja</div>
+        <div class="modal-subtitle">Ingresa el efectivo inicial disponible</div>
+      </div>
+      <button class="modal-close" data-close="modal-apertura-overlay">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Monto inicial en efectivo</label>
+        <input type="number" class="form-input mono" id="apertura-monto" placeholder="0" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observación (opcional)</label>
+        <input type="text" class="form-input" id="apertura-obs" placeholder="Ej: billetes de $50.000 y monedas…">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="modal-apertura-overlay">Cancelar</button>
+      <button class="btn btn-primary" id="btn-confirmar-apertura">Abrir caja</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  MODAL: MOVIMIENTO (ingreso / egreso)      -->
+<!-- ══════════════════════════════════════════ -->
+<div class="overlay hidden" id="modal-movimiento-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Registrar movimiento</div>
+        <div class="modal-subtitle">Ingreso o egreso manual de efectivo</div>
+      </div>
+      <button class="modal-close" data-close="modal-movimiento-overlay">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Tipo de movimiento</label>
+        <select class="form-select" id="mov-tipo">
+          <option value="ingreso">Ingreso</option>
+          <option value="egreso">Egreso</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Monto</label>
+        <input type="number" class="form-input mono" id="mov-monto" placeholder="0" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descripción</label>
+        <input type="text" class="form-input" id="mov-desc" placeholder="Ej: compra de insumos, propina…">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="modal-movimiento-overlay">Cancelar</button>
+      <button class="btn btn-primary" id="btn-confirmar-movimiento">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  MODAL: CIERRE DE CAJA                     -->
+<!-- ══════════════════════════════════════════ -->
+<div class="overlay hidden" id="modal-cierre-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Cierre de caja</div>
+        <div class="modal-subtitle">Ingresa el efectivo contado físicamente</div>
+      </div>
+      <button class="modal-close" data-close="modal-cierre-overlay">×</button>
+    </div>
+    <div class="modal-body">
+      <!-- Resumen de lo que el sistema espera -->
+      <div class="cierre-totals" id="cierre-totals-preview"></div>
+
+      <div class="form-group">
+        <label class="form-label">Efectivo contado (monto real en caja)</label>
+        <input type="number" class="form-input mono" id="cierre-real" placeholder="0" min="0">
+      </div>
+      <div id="cierre-diff-block" style="margin-bottom:14px;display:none;">
+        <div style="padding:12px 14px;border-radius:var(--radius);font-size:13px;display:flex;align-items:center;justify-content:space-between;" id="cierre-diff-card">
+          <span id="cierre-diff-label">Diferencia</span>
+          <span id="cierre-diff-value" class="arqueo-value" style="font-family:var(--font-mono);font-weight:700"></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observaciones del cierre (opcional)</label>
+        <input type="text" class="form-input" id="cierre-obs" placeholder="Ej: faltante por cambio de turno…">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="modal-cierre-overlay">Cancelar</button>
+      <button class="btn btn-danger" id="btn-confirmar-cierre">Confirmar cierre</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  JAVASCRIPT                                -->
+<!-- ══════════════════════════════════════════ -->
+<script>
+// ═══════════════════════════════════════════════════════
+//  ESTADO GLOBAL
+// ═══════════════════════════════════════════════════════
+let caja = {
+  abierta: false,
+  apertura: null,        // { hora, montoInicial, obs }
+  montoInicial: 0,
+  ventas: {              // acumulado por método de pago
+    efectivo: 0,
+    datafono: 0,
+    transferencia: 0,
+    linkpago: 0,
+  },
+  movimientos: [],       // { id, tipo, monto, desc, hora }
+};
+
+// Datos de demo: simular ventas del día
+function cargarDemoVentas() {
+  caja.ventas.efectivo      = 187500;
+  caja.ventas.datafono      = 94000;
+  caja.ventas.transferencia = 32000;
+  caja.ventas.linkpago      = 15000;
+
+  caja.movimientos = [
+    { id:'m0', tipo:'apertura', monto: caja.montoInicial, desc:'Apertura de caja', hora: caja.apertura.hora },
+    { id:'m1', tipo:'egreso',   monto: 25000,  desc:'Compra de insumos', hora:'10:35' },
+    { id:'m2', tipo:'ingreso',  monto: 10000,  desc:'Propina mesero',    hora:'12:14' },
+    { id:'m3', tipo:'egreso',   monto: 8000,   desc:'Servicio domicilio',hora:'13:50' },
+  ];
+}
+
+// ═══════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════
+const fmt = (n) => '$' + Math.abs(n).toLocaleString('es-CO', { minimumFractionDigits: 0 });
+const uid = () => 'mv' + Date.now();
+const now = () => new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+const today = () => new Date().toLocaleDateString('es-CO', { weekday:'long', day:'numeric', month:'long' });
+
+function toast(msg, type = '') {
+  const el = document.createElement('div');
+  el.className = 'toast' + (type ? ' ' + type : '');
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3100);
+}
+
+// ═══════════════════════════════════════════════════════
+//  CÁLCULOS
+// ═══════════════════════════════════════════════════════
+function totalVentas() {
+  return Object.values(caja.ventas).reduce((s, v) => s + v, 0);
+}
+
+function totalEgresos() {
+  return caja.movimientos
+    .filter(m => m.tipo === 'egreso')
+    .reduce((s, m) => s + m.monto, 0);
+}
+
+function totalIngresosManuales() {
+  return caja.movimientos
+    .filter(m => m.tipo === 'ingreso')
+    .reduce((s, m) => s + m.monto, 0);
+}
+
+// Efectivo esperado en caja física
+// = monto inicial + ventas efectivo + ingresos manuales − egresos
+function efectivoEsperado() {
+  return caja.montoInicial
+    + caja.ventas.efectivo
+    + totalIngresosManuales()
+    - totalEgresos();
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER PRINCIPAL
+// ═══════════════════════════════════════════════════════
+function renderVistaCerrada() {
+  document.getElementById('vista-cerrada').classList.remove('hidden');
+  document.getElementById('vista-abierta').classList.add('hidden');
+
+  document.getElementById('btn-apertura').classList.remove('hidden');
+  document.getElementById('btn-apertura-banner').closest?.('button');
+  document.getElementById('btn-cierre').disabled = true;
+  document.getElementById('btn-movimiento').disabled = true;
+  document.getElementById('btn-apertura').disabled = false;
+
+  const pill = document.getElementById('pill-estado');
+  pill.className = 'pill closed-pill';
+  document.getElementById('pill-texto').textContent = 'Cerrada';
+}
+
+function renderVistaAbierta() {
+  document.getElementById('vista-cerrada').classList.add('hidden');
+  document.getElementById('vista-abierta').classList.remove('hidden');
+
+  document.getElementById('btn-cierre').disabled = false;
+  document.getElementById('btn-movimiento').disabled = false;
+  document.getElementById('btn-apertura').disabled = true;
+
+  const pill = document.getElementById('pill-estado');
+  pill.className = 'pill open-pill';
+  document.getElementById('pill-texto').textContent = `Abierta · desde ${caja.apertura.hora}`;
+
+  renderSummary();
+  renderMetodos();
+  renderMovimientos();
+  renderArqueo();
+}
+
+// ─── SUMMARY CARDS ─────────────────────────────────────
+function renderSummary() {
+  const tv = totalVentas();
+  const te = totalEgresos();
+  const tim = totalIngresosManuales();
+  const ef = efectivoEsperado();
+
+  document.getElementById('summary-grid').innerHTML = `
+    <div class="summary-card highlight">
+      <div class="sc-label">Total ventas del día</div>
+      <div class="sc-value">${fmt(tv)}</div>
+      <div class="sc-sub">Todos los métodos</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Efectivo en caja</div>
+      <div class="sc-value positive">${fmt(ef)}</div>
+      <div class="sc-sub">Esperado físicamente</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Saldo inicial</div>
+      <div class="sc-value">${fmt(caja.montoInicial)}</div>
+      <div class="sc-sub">Al abrir la caja</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Egresos manuales</div>
+      <div class="sc-value negative">${fmt(te)}</div>
+      <div class="sc-sub">${caja.movimientos.filter(m=>m.tipo==='egreso').length} movimiento(s)</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Ingresos manuales</div>
+      <div class="sc-value positive">${fmt(tim)}</div>
+      <div class="sc-sub">${caja.movimientos.filter(m=>m.tipo==='ingreso').length} movimiento(s)</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Hora de apertura</div>
+      <div class="sc-value" style="font-size:16px">${caja.apertura.hora}</div>
+      <div class="sc-sub">${today()}</div>
+    </div>
+  `;
+}
+
+// ─── MÉTODOS DE PAGO ───────────────────────────────────
+const metodoConfig = {
+  efectivo:      { label:'Efectivo',      icon:'💵' },
+  datafono:      { label:'Datáfono',      icon:'💳' },
+  transferencia: { label:'Transferencia', icon:'🏦' },
+  linkpago:      { label:'Link de pago',  icon:'🔗' },
+};
+
+function renderMetodos() {
+  const total = totalVentas() || 1;
+  const list = document.getElementById('metodos-list');
+  list.innerHTML = '';
+
+  Object.entries(caja.ventas).forEach(([key, val]) => {
+    const cfg = metodoConfig[key];
+    const pct = Math.round((val / total) * 100);
+    list.innerHTML += `
+      <div class="metodo-row" style="flex-direction:column;align-items:stretch;gap:6px;padding-bottom:12px;border-bottom:1px solid var(--border-light);margin-bottom:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="metodo-label"><span class="metodo-icon">${cfg.icon}</span>${cfg.label}</span>
+          <span class="metodo-amount">${fmt(val)}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="metodo-bar-wrap" style="flex:1">
+            <div class="metodo-bar" style="width:${pct}%"></div>
+          </div>
+          <span style="font-size:11px;color:var(--muted);font-weight:600;min-width:30px;text-align:right">${pct}%</span>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// ─── MOVIMIENTOS ───────────────────────────────────────
+function renderMovimientos() {
+  const list = document.getElementById('movimientos-list');
+  document.getElementById('mov-count').textContent = caja.movimientos.length;
+
+  if (!caja.movimientos.length) {
+    list.innerHTML = '<div class="empty-panel"><span class="ep-icon">📋</span><p>Sin movimientos registrados</p></div>';
+    return;
+  }
+
+  list.innerHTML = caja.movimientos.slice().reverse().map(m => {
+    const icons = { apertura:'🔓', ingreso:'⬆️', egreso:'⬇️' };
+    const amtClass = m.tipo === 'egreso' ? 'egreso' : m.tipo === 'ingreso' ? 'ingreso' : 'apertura';
+    const sign = m.tipo === 'egreso' ? '−' : '+';
+    return `
+      <div class="movimiento-row">
+        <div class="mov-icon ${m.tipo}">${icons[m.tipo] || '•'}</div>
+        <div class="mov-info">
+          <div class="mov-desc">${m.desc}</div>
+          <div class="mov-meta">${m.hora}</div>
+        </div>
+        <div class="mov-amount ${amtClass}">${m.tipo === 'apertura' ? '' : sign}${fmt(m.monto)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── ARQUEO ────────────────────────────────────────────
+function renderArqueo() {
+  const esperado = efectivoEsperado();
+  const body = document.getElementById('arqueo-body');
+  const badge = document.getElementById('arqueo-badge');
+
+  body.innerHTML = `
+    <div class="arqueo-row">
+      <span class="arqueo-label">Saldo inicial</span>
+      <span class="arqueo-value">${fmt(caja.montoInicial)}</span>
+    </div>
+    <div class="arqueo-row">
+      <span class="arqueo-label">Ventas en efectivo</span>
+      <span class="arqueo-value positive" style="color:var(--green)">+${fmt(caja.ventas.efectivo)}</span>
+    </div>
+    <div class="arqueo-row">
+      <span class="arqueo-label">Ingresos manuales</span>
+      <span class="arqueo-value positive" style="color:var(--green)">+${fmt(totalIngresosManuales())}</span>
+    </div>
+    <div class="arqueo-row">
+      <span class="arqueo-label">Egresos manuales</span>
+      <span class="arqueo-value negative" style="color:var(--red)">−${fmt(totalEgresos())}</span>
+    </div>
+    <div class="arqueo-row" style="border-top:2px solid var(--border);padding-top:14px;margin-top:6px;">
+      <span style="font-weight:700;color:var(--ink)">Efectivo esperado en caja</span>
+      <span class="arqueo-value" style="font-size:17px">${fmt(esperado)}</span>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--muted)">
+      Al cerrar la caja, podrás ingresar el efectivo real contado para obtener la diferencia.
+    </div>
+  `;
+
+  // Badge siempre "cuadra" mientras está abierta (se calcula al cerrar)
+  badge.className = 'arqueo-result-badge ok';
+  badge.textContent = '✓ En operación';
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODALES — APERTURA
+// ═══════════════════════════════════════════════════════
+function abrirModalApertura() {
+  document.getElementById('apertura-monto').value = '';
+  document.getElementById('apertura-obs').value = '';
+  document.getElementById('modal-apertura-overlay').classList.remove('hidden');
+}
+
+document.getElementById('btn-apertura').addEventListener('click', abrirModalApertura);
+document.getElementById('btn-apertura-banner').addEventListener('click', abrirModalApertura);
+
+document.getElementById('btn-confirmar-apertura').addEventListener('click', () => {
+  const monto = parseFloat(document.getElementById('apertura-monto').value) || 0;
+  const obs = document.getElementById('apertura-obs').value.trim();
+
+  caja.abierta = true;
+  caja.montoInicial = monto;
+  caja.apertura = { hora: now(), montoInicial: monto, obs };
+  caja.movimientos = [];
+
+  // Demo: cargar ventas simuladas
+  cargarDemoVentas();
+  // Agregar la apertura como primer movimiento
+  caja.movimientos.unshift({ id: uid(), tipo: 'apertura', monto, desc: obs || 'Apertura de caja', hora: caja.apertura.hora });
+
+  document.getElementById('modal-apertura-overlay').classList.add('hidden');
+  renderVistaAbierta();
+  toast(`✅ Caja abierta con ${fmt(monto)} iniciales`, 'success');
+});
+
+// ═══════════════════════════════════════════════════════
+//  MODALES — MOVIMIENTO
+// ═══════════════════════════════════════════════════════
+document.getElementById('btn-movimiento').addEventListener('click', () => {
+  document.getElementById('mov-monto').value = '';
+  document.getElementById('mov-desc').value = '';
+  document.getElementById('mov-tipo').value = 'ingreso';
+  document.getElementById('modal-movimiento-overlay').classList.remove('hidden');
+});
+
+document.getElementById('btn-confirmar-movimiento').addEventListener('click', () => {
+  const tipo  = document.getElementById('mov-tipo').value;
+  const monto = parseFloat(document.getElementById('mov-monto').value);
+  const desc  = document.getElementById('mov-desc').value.trim();
+
+  if (!monto || monto <= 0) { toast('Ingresa un monto válido', 'warning'); return; }
+  if (!desc) { toast('Ingresa una descripción', 'warning'); return; }
+
+  caja.movimientos.push({ id: uid(), tipo, monto, desc, hora: now() });
+
+  document.getElementById('modal-movimiento-overlay').classList.add('hidden');
+  renderVistaAbierta();
+  toast(`${tipo === 'ingreso' ? '⬆️ Ingreso' : '⬇️ Egreso'} registrado: ${fmt(monto)}`, 'success');
+});
+
+// ═══════════════════════════════════════════════════════
+//  MODALES — CIERRE
+// ═══════════════════════════════════════════════════════
+document.getElementById('btn-cierre').addEventListener('click', () => {
+  // Construir preview de totales
+  const tv = totalVentas();
+  const te = totalEgresos();
+  const tim = totalIngresosManuales();
+  const ef = efectivoEsperado();
+
+  document.getElementById('cierre-totals-preview').innerHTML = `
+    <div class="cierre-row"><span class="label">Total ventas del día</span><span class="value">${fmt(tv)}</span></div>
+    <div class="cierre-row"><span class="label">Efectivo en ventas</span><span class="value">${fmt(caja.ventas.efectivo)}</span></div>
+    <div class="cierre-row"><span class="label">Datáfono</span><span class="value">${fmt(caja.ventas.datafono)}</span></div>
+    <div class="cierre-row"><span class="label">Transferencia / Link</span><span class="value">${fmt(caja.ventas.transferencia + caja.ventas.linkpago)}</span></div>
+    <div class="cierre-row"><span class="label">Ingresos manuales</span><span class="value">+${fmt(tim)}</span></div>
+    <div class="cierre-row"><span class="label">Egresos manuales</span><span class="value">−${fmt(te)}</span></div>
+    <div class="cierre-row total-row"><span class="label">Efectivo esperado</span><span class="value">${fmt(ef)}</span></div>
+  `;
+
+  document.getElementById('cierre-real').value = '';
+  document.getElementById('cierre-obs').value = '';
+  document.getElementById('cierre-diff-block').style.display = 'none';
+  document.getElementById('modal-cierre-overlay').classList.remove('hidden');
+});
+
+// Cálculo diferencia en tiempo real
+document.getElementById('cierre-real').addEventListener('input', () => {
+  const real = parseFloat(document.getElementById('cierre-real').value);
+  const esp  = efectivoEsperado();
+  const block = document.getElementById('cierre-diff-block');
+  const card  = document.getElementById('cierre-diff-card');
+  const label = document.getElementById('cierre-diff-label');
+  const value = document.getElementById('cierre-diff-value');
+
+  if (isNaN(real)) { block.style.display = 'none'; return; }
+
+  const diff = real - esp;
+  block.style.display = 'block';
+
+  if (Math.abs(diff) < 500) {
+    card.style.background = 'var(--green-soft)';
+    label.style.color = 'var(--green)';
+    value.style.color = 'var(--green)';
+    label.textContent = 'Diferencia — ¡Cuadra!';
+    value.textContent = fmt(0);
+  } else if (diff > 0) {
+    card.style.background = 'var(--amber-soft)';
+    label.style.color = 'var(--amber)';
+    value.style.color = 'var(--amber)';
+    label.textContent = `Sobrante`;
+    value.textContent = `+${fmt(diff)}`;
+  } else {
+    card.style.background = 'var(--red-soft)';
+    label.style.color = 'var(--red)';
+    value.style.color = 'var(--red)';
+    label.textContent = `Faltante`;
+    value.textContent = `−${fmt(Math.abs(diff))}`;
+  }
+});
+
+document.getElementById('btn-confirmar-cierre').addEventListener('click', () => {
+  const real = parseFloat(document.getElementById('cierre-real').value);
+  if (isNaN(real)) { toast('Ingresa el efectivo contado', 'warning'); return; }
+
+  const esp  = efectivoEsperado();
+  const diff = real - esp;
+  let msg = `🔒 Caja cerrada. Total ventas: ${fmt(totalVentas())}`;
+  if (Math.abs(diff) >= 500) {
+    msg += diff > 0 ? ` · Sobrante: ${fmt(diff)}` : ` · Faltante: ${fmt(Math.abs(diff))}`;
+  } else {
+    msg += ' · Sin diferencias';
+  }
+
+  // Reset estado
+  caja = {
+    abierta: false, apertura: null, montoInicial: 0,
+    ventas: { efectivo:0, datafono:0, transferencia:0, linkpago:0 },
+    movimientos: [],
+  };
+
+  document.getElementById('modal-cierre-overlay').classList.add('hidden');
+  renderVistaCerrada();
+  toast(msg, 'success');
+});
+
+// ═══════════════════════════════════════════════════════
+//  CERRAR MODALES (botones ×  y Cancelar)
+// ═══════════════════════════════════════════════════════
+document.querySelectorAll('[data-close]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById(btn.dataset.close).classList.add('hidden');
+  });
+});
+
+// Click fuera del modal
+document.querySelectorAll('.overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.add('hidden');
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+renderVistaCerrada();
+</script>
+</body>
+</html>
