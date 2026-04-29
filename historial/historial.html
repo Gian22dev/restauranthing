@@ -5,35 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Historial · Sakura</title>
     <link rel="stylesheet" href="historial.css" />
-        <script src="historial.js" defer></script>
   </head>
   <body>
-    <!-- Kanjis decorativos -->
-    <span class="kanji-decorative" style="
-      position: fixed;
-      top: 2rem;
-      left: 2rem;
-      font-size: 8rem;
-      line-height: 1;
-      display: block;
-      color: hsla(10, 80%, 55%, 0.08);
-      font-weight: 700;
-      user-select: none;
-      z-index: 0;
-    ">歴</span>
 
-    <span class="kanji-decorative" style="
-      position: fixed;
-      bottom: 3rem;
-      right: 3rem;
-      font-size: 6rem;
-      line-height: 1;
-      display: block;
-      color: hsla(10, 80%, 55%, 0.08);
-      font-weight: 700;
-      user-select: none;
-      z-index: 0;
-    ">史</span>
+    
+    <!-- Kanjis decorativos -->
+    <span
+      class="kanji-decorative"
+      style="
+        position: fixed;
+        top: 2rem;
+        left: 2rem;
+        font-size: 8rem;
+        line-height: 1;
+        display: block;
+        color: hsla(10, 80%, 55%, 0.08);
+        font-weight: 700;
+        user-select: none;
+        z-index: 0;
+      "
+      >歴</span
+    >
+
+    <span
+      class="kanji-decorative"
+      style="
+        position: fixed;
+        bottom: 3rem;
+        right: 3rem;
+        font-size: 6rem;
+        line-height: 1;
+        display: block;
+        color: hsla(10, 80%, 55%, 0.08);
+        font-weight: 700;
+        user-select: none;
+        z-index: 0;
+      "
+      >史</span
+    >
 
     <div class="layout">
       <!-- SIDEBAR -->
@@ -53,7 +62,9 @@
           <a href="../inventario/index.html">Inventario</a>
           <a class="active">Historial</a>
         </nav>
-        <button class="logout" onclick="location.href = '../login/index.html'">Cerrar sesión</button>
+        <button class="logout" onclick="location.href = '../login/index.html'">
+          Cerrar sesión
+        </button>
       </aside>
 
       <!-- MAIN -->
@@ -65,30 +76,26 @@
             <h1 id="pageTitle">Historial</h1>
             <p id="pageSubtitle">Consulta ventas, mesas y turnos por fecha</p>
           </div>
-          <div class="header-actions">
-            <button class="btn-language" id="langToggle">中文</button>
-            <button class="btn-primary" id="exportBtn">↓ Exportar</button>
-          </div>
         </header>
 
         <!-- STATS -->
         <section class="stats">
-          <div class="stat">
+          <div class="stat ventas">
             <span id="statVentas">VENTAS HOY</span>
             <h2 id="statVentasVal">$0</h2>
             <small id="statVentasSub">del turno actual</small>
           </div>
-          <div class="stat">
+          <div class="stat mesas">
             <span id="statMesas">MESAS</span>
             <h2 id="statMesasVal">0</h2>
             <small id="statMesasSub">pedidos de mesa</small>
           </div>
-          <div class="stat">
+          <div class="stat domicilios">
             <span id="statDomicilios">DOMICILIOS</span>
             <h2 id="statDomiciliosVal">0</h2>
             <small id="statDomiciliosSub">pedidos a domicilio</small>
           </div>
-          <div class="stat">
+          <div class="stat promedio">
             <span id="statPromedio">TICKET PROMEDIO</span>
             <h2 id="statPromedioVal">$0</h2>
             <small id="statPromedioSub">por pedido</small>
@@ -97,17 +104,29 @@
 
         <!-- FILTERS -->
         <section class="filters">
-          <input type="text" id="searchInput" placeholder="Buscar pedido, mesa o cajero..." />
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Buscar pedido, mesa o cajero..."
+          />
+
           <div class="date-filter">
-            <input type="date" id="filterFecha" />
+            <input type="date" id="filterFechaInicio" title="Desde" />
             <span>—</span>
-            <input type="date" id="filterFechaFin" />
+            <input type="date" id="filterFechaFin" title="Hasta" />
           </div>
+
           <div class="tabs">
-            <button class="active" data-estado="todos" id="tabTodos">Todos</button>
+            <button class="active" data-estado="todos" id="tabTodos">
+              Todos
+            </button>
             <button data-estado="cobrado" id="tabCobrado">Cobrados</button>
-            <button data-estado="pendiente" id="tabPendiente">Pendientes</button>
-            <button data-estado="cancelado" id="tabCancelado">Cancelados</button>
+            <button data-estado="pendiente" id="tabPendiente">
+              Pendientes
+            </button>
+            <button data-estado="cancelado" id="tabCancelado">
+              Cancelados
+            </button>
           </div>
         </section>
 
@@ -125,45 +144,50 @@
         </section>
       </main>
     </div>
+    <!-- /.layout -->
 
-    <!-- MODAL DETALLE -->
-    <div class="modal-overlay hidden" id="modalOverlay">
+    <!-- ════════════════════════════════
+       MODAL DETALLE
+  ════════════════════════════════ -->
+    <div class="modal-overlay" id="modalOverlay">
       <div class="modal">
         <div class="modal-header">
           <div>
             <h2 id="modalTitle">Detalle del pedido</h2>
             <span id="modalId" class="modal-id"></span>
           </div>
-          <button class="close-modal" id="closeModal">&times;</button>
+          <button class="close-modal" id="closeModal" aria-label="Cerrar">
+            &times;
+          </button>
         </div>
 
         <div class="modal-info-grid">
           <div class="modal-info-item">
-            <span id="modalLabelTipo">Tipo</span>
+            <span>Tipo</span>
             <strong id="modalTipo">—</strong>
           </div>
           <div class="modal-info-item">
-            <span id="modalLabelHora">Hora</span>
+            <span>Hora</span>
             <strong id="modalHora">—</strong>
           </div>
           <div class="modal-info-item">
-            <span id="modalLabelCajero">Cajero</span>
+            <span>Cajero</span>
             <strong id="modalCajero">—</strong>
           </div>
           <div class="modal-info-item">
-            <span id="modalLabelEstado">Estado</span>
+            <span>Estado</span>
             <strong id="modalEstado">—</strong>
           </div>
         </div>
 
         <div class="modal-items">
-          <h3 id="modalLabelItems">Productos del pedido</h3>
+          <h3>Productos del pedido</h3>
           <ul id="modalItems"></ul>
         </div>
 
         <div class="modal-total">
-          <span id="modalLabelTotal">Total</span>
-          <strong id="modalTotal">$0</strong>
+          <span>Total</span>
+          <strong id="modalTotalVal">$0</strong>
         </div>
 
         <div class="modal-actions">
@@ -173,6 +197,9 @@
       </div>
     </div>
 
+    <!-- TOAST -->
+    <div id="toast" class="toast"></div>
 
+    <script src="historial.js"></script>
   </body>
 </html>
