@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Domicilios</title>
+  <link rel="stylesheet" href="domicilios.css">
+</head>
+<body>
+
+<!-- Kanjis decorativos -->
+<span class="kanji-decorative" style="
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  font-size: 8rem;
+  line-height: 1;
+  display: block;
+  color: hsla(10, 80%, 55%, 0.08);
+  font-weight: 700;
+  user-select: none;
+  z-index: 0;
+">紅</span>
+
+<span class="kanji-decorative" style="
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  font-size: 6rem;
+  line-height: 1;
+  display: block;
+  color: hsla(10, 80%, 55%, 0.08);
+  font-weight: 700;
+  user-select: none;
+  z-index: 0;
+">屋</span>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">麺</div>
+      <div>
+        <h3>SAKURA</h3>
+        <span>Mesero</span>
+      </div>
+    </div>
+
+    <nav>
+      <a>Mesas</a>
+      <a>Menú</a>
+      <a class="active">Domicilios</a>
+      <a>Caja</a>
+      <a>Usuarios</a>
+    </nav>
+
+    <button class="logout">Cerrar sesión</button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="content">
+
+    <header class="header">
+      <div>
+        <span class="breadcrumb">出前 · DELIVERY</span>
+        <h1 id="pageTitle">Domicilios</h1>
+        <p id="pageSubtitle">Gestiona los pedidos a domicilio del día</p>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-language" id="langToggle">中文</button>
+        <button class="btn-primary" id="newBtn">+ Nuevo domicilio</button>
+      </div>
+    </header>
+
+    <!-- STATS -->
+    <section class="stats">
+      <div class="stat">
+        <span id="statPending">PENDIENTES</span>
+        <h2>3</h2>
+      </div>
+      <div class="stat">
+        <span id="statRoute">EN RUTA</span>
+        <h2>2</h2>
+      </div>
+      <div class="stat">
+        <span id="statDelivered">ENTREGADOS</span>
+        <h2>1</h2>
+      </div>
+    </section>
+
+    <!-- FILTERS -->
+    <section class="filters">
+      <input type="text" id="searchInput" placeholder="Buscar pedido, cliente o dirección">
+      
+      <div class="tabs">
+        <button class="active" data-filtro="todos" id="tabAll">Todos</button>
+        <button data-filtro="pendiente" id="tabPending">Pendientes</button>
+        <button data-filtro="ruta" id="tabRoute">En ruta</button>
+        <button data-filtro="entregado" id="tabDelivered">Entregados</button>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section class="cards" id="cards"></section>
+
+  </main>
+</div>
+
+<script src="domicilios.js"></script>
+</body>
+</html>
