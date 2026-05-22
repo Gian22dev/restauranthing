@@ -4,43 +4,90 @@
   <meta charset="UTF-8">
   <title>Inventario</title>
   <link rel="stylesheet" href="./style.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
 
-<div class="app">
+<!-- Logo SAKURA -->
+
+
+<!-- Kanjis decorativos -->
+<span class="kanji-decorative" style="
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  font-size: 8rem;
+  line-height: 1;
+  display: block;
+  color: hsla(10, 80%, 55%, 0.08);
+  font-weight: 700;
+  user-select: none;
+  z-index: 0;
+">紅</span>
+
+<span class="kanji-decorative" style="
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  font-size: 6rem;
+  line-height: 1;
+  display: block;
+  color: hsla(10, 80%, 55%, 0.08);
+  font-weight: 700;
+  user-select: none;
+  z-index: 0;
+">屋</span>
+
+<!-- Imagen decorativa rotando -->
+<img src="../src/chopsuey.png" alt="" class="decor-rotate" style="user-select: none;">
+
+<div class="layout">
 <aside class="sidebar">
 
-  <div class="user">
-    <div class="avatar"></div>
-    <span>Mesero</span>
+  <div class="brand">
+    <div class="logo">麺</div>
+    <div>
+      <h3>SAKURA</h3>
+      <span>Mesero</span>
+    </div>
   </div>
 
   <nav>
     <a href="../mesas/pedidos/mesas.pedidos.html">Mesas</a>
-    <a href="rapido.html">Rápido</a>
-    <a href="domicilios.html">Domicilios</a>
-    <a href="caja.html">Caja</a>
-    <a href="inventario.html" class="active">Inventario</a>
-    <a href="historial.html">Historial</a>
+    <a href="../rapido.html">Menú</a>
+    <a href="../domicilios/domicilios.html">Domicilios</a>
+    <a href="../caja.html">Caja</a>
+    <a href="index.html" class="active">Inventario</a>
+    <a href="../historial.html">Usuarios</a>
   </nav>
+
+  <button class="logout">Cerrar sesión</button>
 
 </aside>
 
-<main class="main">
+<main class="content">
   <div class="container">
 
     <div class="card">
 
       <!-- HEADER -->
       <div class="header">
-        <h1>Inventory</h1>
+        <div class="header-left">
+          <span class="breadcrumb" id="breadcrumb">庫存 · INVENTORY</span>
+          <h1 id="pageTitle">Inventario</h1>
+          <p id="pageSubtitle">Gestiona el inventario del restaurante</p>
+        </div>
+        <button class="btn-primary" id="newBtn" onclick="cambiarSeccion('crear', document.querySelectorAll('.tabs button')[1])">+ Nuevo producto</button>
+      </div>
 
-        <input type="text" id="search" placeholder="Search..." onkeyup="filtrar()">
+      <div class="filters">
+        <input type="text" id="search" placeholder="Buscar producto..." onkeyup="filtrar()">
+        <button id="langToggle" class="lang-btn" onclick="cambiarIdioma()">中文</button>
 
         <div class="tabs">
-          <button onclick="cambiarSeccion('stock', this)" class="active">Stock</button>
-        <button onclick="cambiarSeccion('crear', this)">Add Product</button>
-        <button onclick="cambiarSeccion('mov', this)">Movimiento</button>
+          <button onclick="cambiarSeccion('stock', this)" class="active" id="tabStock">Stock</button>
+        <button onclick="cambiarSeccion('crear', this)" id="tabCrear">Agregar</button>
+        <button onclick="cambiarSeccion('mov', this)" id="tabMov">Movimiento</button>
         </div>
       </div>
 
@@ -49,9 +96,9 @@
         <table>
           <thead>
             <tr>
-              <th>Nombre</th>
-              <th>Tipo</th>
-              <th>Stock</th>
+              <th id="thNombre">Nombre</th>
+              <th id="thTipo">Tipo</th>
+              <th id="thStock">Stock</th>
             </tr>
           </thead>
           <tbody id="tablaBody"></tbody>
@@ -62,11 +109,11 @@
       <div id="crear" class="seccion">
         <input type="text" id="nombre" placeholder="Nombre">
         <select id="tipo">
-          <option value="gramos">Gramos</option>
-          <option value="unidad">Unidad</option>
+          <option value="gramos" id="optGramos">Gramos</option>
+          <option value="unidad" id="optUnidad">Unidad</option>
         </select>
         <input type="number" id="stockInput" placeholder="Stock">
-        <button class="btn-main" onclick="crearInsumo()">Crear</button>
+        <button class="btn-main" id="btnCrear" onclick="crearInsumo()">Crear</button>
       </div>
 
       <!-- MOVIMIENTO -->
@@ -74,11 +121,11 @@
         <select id="insumoSelect"></select>
         <input type="number" id="cantidadMov" placeholder="Cantidad">
         <select id="tipoMov">
-          <option value="entrada">Entrada</option>
-          <option value="salida">Salida</option>
-          <option value="ajuste">Ajuste</option>
+          <option value="entrada" id="optEntrada">Entrada</option>
+          <option value="salida" id="optSalida">Salida</option>
+          <option value="ajuste" id="optAjuste">Ajuste</option>
         </select>
-        <button class="btn-main" onclick="registrarMovimiento()">Aplicar</button>
+        <button class="btn-main" id="btnAplicar" onclick="registrarMovimiento()">Aplicar</button>
       </div>
 
     </div>
@@ -86,13 +133,6 @@
   </div>
 </main>
 
-</div>
-
-
-
-  </div>
-</div>
 <div id="toast" class="toast"></div>
-<script src="script.js"></script>
 </body>
 </html>
