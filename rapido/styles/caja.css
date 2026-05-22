@@ -1,0 +1,183 @@
+/* ============================================
+   Akané POS — Estilos específicos de Caja
+   ============================================ */
+
+   body{
+    overflow-y: scroll;
+   }
+
+.grid-checkout {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 1024px) {
+  .grid-checkout { grid-template-columns: 1fr 380px; align-items: start; }
+}
+
+.checkout-left { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.section-block { padding: 1.5rem; }
+.section-title-sm { font-size: 1.125rem; color: var(--ink); }
+
+/* ============ Order list ============ */
+.order-list { list-style: none; display: grid; gap: .75rem; margin-bottom: 1.25rem; }
+.order-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.order-item:last-child { border-bottom: none; }
+.order-qty {
+  width: 32px; height: 32px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: .875rem;
+}
+.order-name { font-weight: 500; color: var(--ink); }
+.order-meta { font-size: .75rem; color: var(--muted); margin-top: .125rem; }
+.order-price { font-weight: 600; color: var(--ink); }
+
+/* ============ Pay methods ============ */
+.pay-methods {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+}
+@media (min-width: 640px) {
+  .pay-methods { grid-template-columns: repeat(4, 1fr); }
+}
+.pay-option {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1rem .75rem;
+  display: flex; flex-direction: column; align-items: center; gap: .375rem;
+  transition: all .2s ease;
+}
+.pay-option:hover { border-color: rgba(233, 78, 46, .4); }
+.pay-option.active {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.pay-jp { font-size: 1.25rem; color: var(--primary); line-height: 1; }
+.pay-name { font-size: .875rem; color: var(--ink-soft); font-weight: 500; }
+.pay-option.active .pay-name { color: var(--ink); }
+
+/* ============ Pay panel ============ */
+.pay-panel { margin-bottom: 1.5rem; }
+.input-prefix {
+  position: absolute; left: 1rem; top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-weight: 500;
+  pointer-events: none;
+}
+.input-clean.has-prefix { padding-left: 2rem; }
+
+.quick-cash {
+  display: flex; flex-wrap: wrap; gap: .5rem;
+  margin-top: .75rem;
+}
+.quick-cash button {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  padding: .375rem 1rem;
+  font-size: .875rem;
+  transition: all .2s ease;
+}
+.quick-cash button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.change-box {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--background);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: .875rem;
+  color: var(--ink-soft);
+}
+.change-box strong {
+  font-size: 1.25rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ============ Discount ============ */
+.discount-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ============ Right column ============ */
+.checkout-right { align-self: start; }
+@media (min-width: 1024px) {
+  .checkout-right { position: sticky; top: 1.5rem; }
+}
+.pay-summary { padding: 1.75rem; }
+.big-total {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 2.75rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: .5rem;
+}
+.mini-row {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: .875rem;
+  color: var(--ink-soft);
+  padding: .375rem 0;
+}
+.mini-row span:last-child { color: var(--ink); font-weight: 500; }
+
+.btn-ghost.full { width: 100%; }
+
+/* ============ Modal ============ */
+.modal {
+  position: fixed; inset: 0;
+  background: rgba(30, 30, 30, .45);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  z-index: 50;
+  animation: fadeIn .25s ease;
+}
+.modal[hidden] { display: none; }
+.modal-card {
+  max-width: 380px;
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+  animation: pop .35s cubic-bezier(.2,.9,.3,1.2);
+}
+.success-icon {
+  width: 72px; height: 72px;
+  margin: 0 auto 1rem;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-kanji { font-size: 1.5rem; color: var(--primary); margin-bottom: .25rem; }
+.modal-title { font-size: 1.5rem; color: var(--ink); margin-bottom: .5rem; font-weight: 600; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop {
+  from { opacity: 0; transform: translateY(8px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akané POS · Rápido</title>
+  <meta name="description" content="POS minimalista de inspiración asiática — rama Rápido." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+
+<body>
+  <span class="kanji-decorative" style="
+    position: absolute;
+    top: 7rem;
+    left: 2rem;
+    font-size: 8rem;
+    line-height: 1;
+    display: block;
+    color: hsla(10, 80%, 55%, 0.166);
+    font-weight: 700;
+    user-select: none;
+    -webkit-text-stroke: 2px hsla(10, 80%, 55%, 0.1);
+">红</span>
+
+  <span class="kanji-decorative" style="
+    position: absolute;
+    bottom: 3rem;
+    right: 3rem;
+    font-size: 6rem;
+    line-height: 1;
+    display: block;
+    color: hsla(10, 80%, 55%, 0.166);
+    font-weight: 700;
+    user-select: none;
+    -webkit-text-stroke: 2px hsla(10, 80%, 55%, 0.1);
+">屋</span>
+
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="user">
+      <div class="avatar"></div>
+      <span>Mesero</span>
+    </div>
+    <nav>
+      <button class="active">Mesas</button>
+      <button class="inactive">Rápido</button>
+      <button class="inactive">Domicilios</button>
+      <button class="inactive">Caja</button>
+      <button class="inactive">Inventario</button>
+      <button class="inactive">Historial</button>
+    </nav>
+  </aside>
+
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-logo font-display"><img src="img\TRlogo.png" alt="屋" onerror="this.outerHTML=this.alt;"></div>
+        <div>
+          <h1 class="brand-title font-display">Techos Rojos</h1>
+          <p class="brand-sub">Rápido · <span class="font-display">快速地</span></p>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <div class="container stepper-wrap">
+          <div class="stepper">
+            <div class="step" data-step="1">
+              <div class="step-bullet">1</div>
+              <span>Turno</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="2">
+              <div class="step-bullet">2</div>
+              <span>Productos</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="3">
+              <div class="step-bullet">3</div>
+              <span>Caja</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="chip">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+        <span id="todayDate"></span>
+      </div>
+    </div>
+  </header>
+
+
+  <main class="container main">
+    <!-- ============ TURNO ============ -->
+    <section id="view-turno" class="view active grid-2">
+      <div>
+        <p class="eyebrow">Apertura · 开幕</p>
+        <h2 class="display-title">
+          Prepara tu estación, <br />
+          <span class="accent">comienza a servir.</span>
+        </h2>
+        <p class="lead">
+          Selecciona la caja y escribe tu nombre para comenzar a registrar pedidos. Cada turno es
+          un nuevo recipiente vacío esperando ser llenado.
+        </p>
+
+        <form id="shiftForm" class="form-stack">
+          <label class="field">
+            <span class="field-label">Caja asignada</span>
+            <select id="register" class="input-clean">
+              <option>Caja 01</option>
+              <option>Caja 02</option>
+              <option>Caja 03</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field-label">Usuario / Cajero</span>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <input id="cashier" class="input-clean has-icon" placeholder="Nombre del cajero" />
+            </div>
+          </label>
+
+          <button id="openShiftBtn" type="submit" class="btn-primary" disabled>
+            <span class="btn-label">Confirmar apertura</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <div class="illustration">
+        <div class="illustration-glow"></div>
+        <!-- Ilustración Ramen -->
+        <img src="img/chopsuey.png" alt="" style="height: 490px;">
+      </div>
+    </section>
+
+    <!-- ============ PRODUCTOS ============ -->
+    <section id="view-productos" class="view grid-products">
+      <div>
+        <div class="row-between mb-6">
+          <div>
+            <p class="eyebrow">Selección · 顺序</p>
+            <h2 class="section-title font-display">Productos</h2>
+          </div>
+          <span class="chip" id="shiftChip">Turno Mañana · Caja 01</span>
+        </div>
+
+        <div class="search-wrap mb-6">
+          <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input id="search" class="input-clean has-icon" placeholder="Buscar producto..." />
+        </div>
+
+        <div id="categories" class="categories mb-6"></div>
+
+        <div id="productGrid" class="product-grid" style="padding-top: 5px;"></div>
+      </div>
+
+      <!-- Carrito -->
+      <aside class="cart card-soft">
+        <div class="row-between mb-5">
+          <h3 class="cart-title font-display">Pedido actual</h3>
+          <span class="muted-xs"><span id="cartCount">0</span> items</span>
+        </div>
+
+        <div id="cartEmpty" class="cart-empty">
+          <p class="font-display empty-kanji">空</p>
+          <p class="muted-sm">El pedido está vacío</p>
+        </div>
+
+        <ul id="cartList" class="cart-list" hidden></ul>
+
+        <div class="totals">
+          <div class="total-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+          <div class="total-row"><span>Impuestos (10%)</span><span id="tax">$0.00</span></div>
+          <div class="divider"></div>
+          <div class="total-row total-final"><span>Total</span><span id="total">$0.00</span></div>
+        </div>
+
+        <button id="goCheckout" class="btn-primary full mt-6" disabled>
+          Ir a Caja
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </button>
+        <p class="thanks">非常感谢 · Gracias</p>
+      </aside>
+    </section>
+  </main>
+
+
+  <script src="scripts/app.js"></script>
+</body>
+
+</html>
