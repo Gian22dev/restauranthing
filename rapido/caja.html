@@ -44,6 +44,32 @@
   z-index: 0;
 ">屋</span>
 
+
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand1">
+      <div class="logo">麺</div>
+      <div class="text">
+        <h3>SAKURA</h3>
+        <span>Mesero</span>
+      </div>
+    </div>
+    <nav>
+      <a href="../mesas/pedidos/mesas.pedidos.html">Mesas</a>
+      <a class="active">Rapido</a>
+      <a href="/domicilios/domicilios.html">Domicilios</a>
+      <a href="">Caja</a>
+      <a href="/inventario/index.html">Inventario</a>
+      <a href="">Usuarios</a>
+
+    </nav>
+    <button class="logout"  onclick="location.href='/login/index.html'">Cerrar sesión</button>
+  </aside>
+
+
+
+
   <!-- ============ HEADER ============ -->
   <header class="site-header">
     <div class="container header-inner">
@@ -84,7 +110,6 @@
     </div>
   </header>
 
-  <!-- ============ STEPPER ============ -->
 
 
   <main class="container main">
@@ -235,13 +260,9 @@
       </button>
     </div>
   </div>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <span>© Akané POS</span>
-      <span class="font-display">静けさの中に味がある</span>
-    </div>
-  </footer>
+  <div id="ramen">
+    <img src="/src/chopsuey.png" alt="xd">
+  </div>
 
   <script src="scripts/caja.js"></script>
 </body>

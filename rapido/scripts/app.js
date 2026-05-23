@@ -104,6 +104,8 @@ function bindShiftForm() {
   const registerEl = $('#register');
   const cashierEl = $('#cashier');
   const btn = $('#openShiftBtn');
+  const image = document.getElementById("foodImage");
+  const glow = document.getElementById("glow")
 
   const updateBtn = () => {
     btn.disabled = !cashierEl.value.trim();
@@ -123,20 +125,40 @@ function bindShiftForm() {
 
     if (!state.cashier.trim()) return;
 
-    btn.textContent = 'Iniciando...';
+    // 🔄 Animación imagen
+    setTimeout(() => {
+      image.classList.add("rotate");
+      glow.style.display = "none";
+    }, 200);
+
+
+
+
+    btn.textContent = '开始...';
     btn.disabled = true;
 
     setTimeout(() => {
       state.step = 'productos';
       goToView('productos');
-    }, 400);
+    }, 250);
   });
 }
 
 // ---------- Vistas ----------
 function goToView(view) {
-  $$('.view').forEach((v) => v.classList.remove('active'));
-  $(`#view-${view}`).classList.add('active');
+  const views = $$('.view');
+
+  views.forEach((v) => {
+    v.classList.remove('active', 'fade-in');
+  });
+
+  const next = $(`#view-${view}`);
+  next.classList.add('active');
+
+  // reiniciar animación
+  void next.offsetWidth;
+
+  next.classList.add('fade-in');
 
   renderStepper();
 

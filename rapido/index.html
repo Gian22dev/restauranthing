@@ -44,18 +44,23 @@
 
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="user">
-      <div class="avatar"></div>
-      <span>Mesero</span>
+    <div class="brand1">
+      <div class="logo">麺</div>
+      <div class="text">
+        <h3>SAKURA</h3>
+        <span>Mesero</span>
+      </div>
     </div>
     <nav>
-      <button class="active">Mesas</button>
-      <button class="inactive">Rápido</button>
-      <button class="inactive">Domicilios</button>
-      <button class="inactive">Caja</button>
-      <button class="inactive">Inventario</button>
-      <button class="inactive">Historial</button>
+      <a href="../mesas/pedidos/mesas.pedidos.html">Mesas</a>
+      <a class="active">Rapido</a>
+      <a href="/domicilios/domicilios.html">Domicilios</a>
+      <a href="">Caja</a>
+      <a href="/inventario/index.html">Inventario</a>
+      <a href="">Usuarios</a>
+
     </nav>
+    <button class="logout"  onclick="location.href='/login/index.html'">Cerrar sesión</button>
   </aside>
 
 
@@ -148,13 +153,13 @@
         </form>
       </div>
 
-      <div class="illustration">
-        <div class="illustration-glow"></div>
-        <!-- Ilustración Ramen -->
-        <img src="img/chopsuey.png" alt="" style="height: 490px;">
-      </div>
     </section>
 
+    <div class="illustration">
+      <div class="illustration-glow" id="glow"></div>
+      <!-- Ilustración Ramen -->
+      <img id="foodImage" src="img/chopsuey.png" alt="" style="height: 490px;">
+    </div>
     <!-- ============ PRODUCTOS ============ -->
     <section id="view-productos" class="view grid-products">
       <div>
