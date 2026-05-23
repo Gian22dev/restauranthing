@@ -113,7 +113,7 @@ function crearInsumo() {
     // LIMPIAR FORM
     document.getElementById("nombre").value = "";
     document.getElementById("stockInput").value = "";
-    document.getElementById("tipo").value = "Gr";
+    document.getElementById("tipo").value = "gramos";
 
     mostrarToast(traducciones[idiomaActual].toastCreado);
 }
