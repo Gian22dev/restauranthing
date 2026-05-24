@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Techos Rojos POS · Rápido</title>
+  <meta name="description" content="POS Techos Rojos — Módulo de venta rápida." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+  <style>
+    /* ── Page-specific: Rápido ─────────────────────────────── */
+
+    /* Views */
+    .view {
+      display: none;
+      animation: fadeSlideUp .3s ease both;
+    }
+    .view.active { display: flex; }
+
+    /* ── VIEW TURNO ─────────────────────────────────────────── */
+    #view-turno {
+      flex-direction: row;
+      align-items: stretch;
+      min-height: calc(100vh - var(--header-h));
+    }
+
+    .turno-left {
+      flex: 1;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .turno-right {
+      width: 410px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .food-illustration {
+      width: 400px;
+      height: 400px;
+      object-fit: contain;
+      position: relative;
+      z-index: 1;
+      transition: transform 1.2s cubic-bezier(.22,1,.36,1), opacity 1s ease;
+    }
+
+    .food-illustration.spin-out {
+      animation: spin 1.2s cubic-bezier(.22,1,.36,1) forwards;
+    }
+
+    .glow-circle {
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      filter: blur(50px);
+      z-index: 0;
+      transition: opacity .5s;
+    }
+
+    .form-stack {
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    /* ── VIEW PRODUCTOS ─────────────────────────────────────── */
+    #view-productos {
+      flex-direction: row;
+      height: calc(100vh - var(--header-h));
+      overflow: hidden;
+    }
+
+    /* Product panel */
+    .productos-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .productos-panel__top {
+      padding: 1.25rem 1.5rem 0;
+      flex-shrink: 0;
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 1rem; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 44px;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      padding: 0 1rem 0 2.75rem;
+      font-size: .9rem;
+      outline: none;
+      transition: var(--transition);
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+    }
+
+    .search-input:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(180,24,0,.1);
+    }
+
+    .search-input::placeholder { color: var(--muted); }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      padding: 1rem 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .cat-btn {
+      height: 36px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--ink-soft);
+      font-size: .82rem;
+      font-weight: 600;
+      font-family: var(--font-ui);
+      transition: var(--transition);
+      white-space: nowrap;
+      touch-action: manipulation;
+    }
+
+    .cat-btn:hover { border-color: var(--red); color: var(--red); }
+    .cat-btn.active { background: var(--red); color: white; border-color: var(--red); }
+
+    .product-grid-wrap {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: .875rem;
+    }
+
+    .product-card {
+      background: var(--bg);
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+      transition: var(--transition);
+      touch-action: manipulation;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-lg);
+      border: 2px solid transparent;
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .product-card:hover::after { border-color: var(--red); }
+    .product-card:active { transform: scale(.97); }
+
+    .product-card__cn {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--red);
+      line-height: 1;
+      opacity: .6;
+    }
+
+    .product-card__name {
+      font-size: .875rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .product-card__cat {
+      font-size: .72rem;
+      color: var(--muted);
+      font-family: var(--font-ui);
+    }
+
+    .product-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .product-card__price {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .product-card__add {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--red);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+
+    .product-card:hover .product-card__add {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(180,24,0,.3);
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
+      font-family: var(--font-ui);
+    }
+
+    .empty-state .empty-cn {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      color: rgba(180,24,0,.2);
+      display: block;
+      margin-bottom: .5rem;
+    }
+
+    /* Cart */
+    .cart-panel {
+      width: 320px;
+      flex-shrink: 0;
+      background: var(--bg);
+      border-left: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .cart-panel__header {
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid var(--border-light);
+      flex-shrink: 0;
+    }
+
+    .cart-panel__title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .cart-count {
+      background: var(--red);
+      color: white;
+      font-size: .7rem;
+      font-weight: 700;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+    }
+
+    .cart-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 1.25rem;
+    }
+
+    .cart-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: .5rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .cart-empty .empty-cn {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: rgba(180,24,0,.15);
+    }
+
+    .cart-list {
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .6rem .75rem;
+      background: var(--bg-soft);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-light);
+      animation: fadeSlideUp .2s ease both;
+    }
+
+    .cart-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cart-item__name {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cart-item__meta {
+      font-size: .7rem;
+      color: var(--muted);
+      font-family: var(--font-ui);
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      flex-shrink: 0;
+    }
+
+    .qty-btn {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--bg-muted);
+      color: var(--ink-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      min-width: 28px;
+    }
+
+    .qty-btn:hover { background: var(--red); color: white; }
+
+    .qty-value {
+      font-size: .85rem;
+      font-weight: 700;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .cart-item__remove {
+      color: var(--muted);
+      font-size: .8rem;
+      cursor: pointer;
+      padding: .2rem;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .cart-item__remove:hover { color: var(--red); }
+
+    .cart-panel__footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border-light);
+      flex-shrink: 0;
+    }
+
+    /* ── Tablet responsive ──────────────────────────────────── */
+    @media (max-width: 900px) {
+      .turno-right { display: none; }
+      .turno-left { padding: 2rem 1.25rem; }
+      .form-stack { max-width: 100%; }
+
+      #view-productos { flex-direction: column; height: auto; min-height: calc(100vh - var(--header-h)); }
+      .productos-panel { overflow: visible; }
+      .product-grid-wrap { overflow: visible; padding-bottom: 1rem; }
+      .product-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); }
+
+      .cart-panel {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border-light);
+        max-height: 40vh;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Kanji decorativos -->
+<span class="kanji-bg k1">快</span>
+<span class="kanji-bg k2">速</span>
+
+<!-- ─── App Shell ─────────────────────────────────────────── -->
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <div class="sidebar__logo">
+        <img src="./img/TRlogo.png" alt="TR" onerror="this.outerHTML='<span class=\'sidebar__logo-text\'>红</span>'">
+      </div>
+      <div class="sidebar__info">
+        <h3>Techos Rojos</h3>
+        <span>Sistema POS</span>
+      </div>
+    </div>
+
+    <nav class="sidebar__nav">
+      <a href="#">
+        <span class="nav-icon">🏮</span>
+        <span>Mesas</span>
+      </a>
+      <a href="index.html" class="active">
+        <span class="nav-icon">⚡</span>
+        <span>Rápido</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">🛵</span>
+        <span>Domicilios</span>
+      </a>
+      <a href="caja.html">
+        <span class="nav-icon">💰</span>
+        <span>Caja</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">📦</span>
+        <span>Inventario</span>
+      </a>
+      <a href="#">
+        <span class="nav-icon">👤</span>
+        <span>Usuarios</span>
+      </a>
+    </nav>
+
+    <button class="sidebar__logout" onclick="location.href='#'">
+      <span>↩</span>
+      <span>Cerrar sesión</span>
+    </button>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-area">
+
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header__brand">
+        <div class="header__logo-wrap">
+          <img src="./img/TRlogo.png" alt="TR" onerror="this.parentElement.outerHTML='<div class=\'header__logo-fallback\'>红</div>'">
+        </div>
+        <div>
+          <div class="header__title">Techos Rojos</div>
+          <div class="header__subtitle">Rápido · <span class="cn">快速</span></div>
+        </div>
+      </div>
+
+      <div class="header__center">
+        <div class="stepper" id="stepper">
+          <div class="step active" data-step="1">
+            <div class="step-bullet">1</div>
+            <span>Turno</span>
+          </div>
+          <div class="step-line" id="line-1-2"></div>
+          <div class="step" data-step="2">
+            <div class="step-bullet">2</div>
+            <span>Productos</span>
+          </div>
+          <div class="step-line" id="line-2-3"></div>
+          <div class="step" data-step="3">
+            <div class="step-bullet">3</div>
+            <span>Caja</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header__right">
+        <div class="chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span id="todayDate"></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content-area">
+
+      <!-- ====== VIEW: TURNO ====== -->
+      <section id="view-turno" class="view active">
+
+        <div class="turno-left">
+          <p class="eyebrow mb-4">Apertura · 开幕</p>
+          <h2 class="display-title mb-4">
+            Prepara tu estación,<br>
+            <span class="accent">comienza a servir.</span>
+          </h2>
+          <p class="lead">
+            Selecciona la caja y tu usuario para registrar pedidos.
+            Cada turno es un nuevo comienzo.
+          </p>
+
+          <form id="shiftForm" class="form-stack" onsubmit="openShift(event)">
+            <div>
+              <label class="field-label">Caja asignada</label>
+              <select id="register" class="input-clean">
+                <option value="Caja 01">Caja 01 — Principal</option>
+                <option value="Caja 02">Caja 02 — Bar</option>
+                <option value="Caja 03">Caja 03 — Terraza</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="field-label">Cajero / Usuario</label>
+              <div class="input-wrap">
+                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+                <input id="cashier" class="input-clean has-icon" placeholder="Nombre del cajero" autocomplete="off" />
+              </div>
+            </div>
+
+            <div>
+              <label class="field-label">Turno</label>
+              <select id="turnType" class="input-clean">
+                <option value="Mañana">Mañana (6:00 - 14:00)</option>
+                <option value="Tarde">Tarde (14:00 - 22:00)</option>
+                <option value="Noche">Noche (22:00 - 6:00)</option>
+              </select>
+            </div>
+
+            <button id="openShiftBtn" type="submit" class="btn-primary" disabled style="margin-top:.5rem;">
+              Confirmar apertura
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+
+        <div class="turno-right">
+          <div class="glow-circle" id="glowCircle"></div>
+          <img id="foodImage" src="./img/chopsuey.png" alt="Plato" class="food-illustration" />
+        </div>
+
+      </section>
+
+      <!-- ====== VIEW: PRODUCTOS ====== -->
+      <section id="view-productos" class="view">
+
+        <!-- Products panel -->
+        <div class="productos-panel">
+          <div class="productos-panel__top">
+            <div class="row-between mb-4">
+              <div>
+                <p class="eyebrow">Selección · 顺序</p>
+                <h2 class="section-title">Productos</h2>
+              </div>
+              <div class="chip" id="shiftChip">—</div>
+            </div>
+            <div class="search-wrap mb-4">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input id="searchInput" class="search-input" placeholder="Buscar producto o categoría..." />
+            </div>
+          </div>
+
+          <div class="categories" id="categories"></div>
+
+          <div class="product-grid-wrap">
+            <div class="product-grid" id="productGrid"></div>
+          </div>
+        </div>
+
+        <!-- Cart panel -->
+        <aside class="cart-panel">
+          <div class="cart-panel__header">
+            <div class="row-between">
+              <span class="cart-panel__title">Pedido actual</span>
+              <div class="row-between" style="gap:.5rem;">
+                <span class="muted-xs"><span id="cartCount">0</span> items</span>
+                <div class="cart-count" id="cartCountBadge">0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cart-body" id="cartBody">
+            <div class="cart-empty" id="cartEmpty">
+              <span class="empty-cn">空</span>
+              <span class="muted-sm">El pedido está vacío</span>
+            </div>
+            <ul class="cart-list" id="cartList" hidden></ul>
+          </div>
+
+          <div class="cart-panel__footer">
+            <div class="totals mb-4">
+              <div class="total-row">
+                <span>Subtotal</span>
+                <span id="subtotal">$0.00</span>
+              </div>
+              <div class="total-row">
+                <span>Impuestos (10%)</span>
+                <span id="tax">$0.00</span>
+              </div>
+              <div class="divider"></div>
+              <div class="total-row final">
+                <span>Total</span>
+                <span id="total">$0.00</span>
+              </div>
+            </div>
+
+            <button id="goCheckout" class="btn-primary full" disabled>
+              Ir a Caja
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+            <p class="thanks" style="margin-top:.75rem;">非常感谢 · Gracias por su preferencia</p>
+          </div>
+        </aside>
+
+      </section>
+
+    </div><!-- /content-area -->
+  </div><!-- /main-area -->
+</div><!-- /app-shell -->
+
+<script>
+/* ============================================================
+   Techos Rojos POS — Rápido · app.js integrado
+   ============================================================ */
+
+// ── Products ──────────────────────────────────────────────────
+const PRODUCTS = [
+  { id:'p1',  name:'Chow Mein',       cn:'炒面',     cat:'Fideos',   price:12.5 },
+  { id:'p2',  name:'Lo Mein Res',     cn:'牛肉捞面', cat:'Fideos',   price:14.0 },
+  { id:'p3',  name:'Chop Suey',       cn:'炒杂碎',   cat:'Wok',      price:13.5 },
+  { id:'p4',  name:'Arroz Frito',     cn:'炒饭',     cat:'Arroces',  price:11.0 },
+  { id:'p5',  name:'Arroz Especial',  cn:'特色饭',   cat:'Arroces',  price:14.5 },
+  { id:'p6',  name:'Pollo Agridulce', cn:'甜酸鸡',   cat:'Wok',      price:15.0 },
+  { id:'p7',  name:'Cerdo BBQ',       cn:'叉烧',     cat:'Parrilla', price:16.5 },
+  { id:'p8',  name:'Costillas',       cn:'排骨',     cat:'Parrilla', price:18.0 },
+  { id:'p9',  name:'Rollitos Primavera',cn:'春卷',   cat:'Entradas', price:7.5  },
+  { id:'p10', name:'Sopa Wonton',     cn:'馄饨汤',   cat:'Sopas',    price:9.0  },
+  { id:'p11', name:'Sopa Maíz',       cn:'玉米汤',   cat:'Sopas',    price:8.5  },
+  { id:'p12', name:'Té Frío',         cn:'冷茶',     cat:'Bebidas',  price:3.5  },
+  { id:'p13', name:'Jugo Natural',    cn:'果汁',     cat:'Bebidas',  price:4.5  },
+  { id:'p14', name:'Agua',            cn:'水',       cat:'Bebidas',  price:2.0  },
+  { id:'p15', name:'Banana Split',    cn:'香蕉船',   cat:'Postres',  price:6.5  },
+];
+
+const CATS = ['Todos','Fideos','Arroces','Wok','Parrilla','Entradas','Sopas','Bebidas','Postres'];
+const CAT_CN = { 'Todos':'全部','Fideos':'面条','Arroces':'米饭','Wok':'炒菜','Parrilla':'烧烤','Entradas':'小吃','Sopas':'汤','Bebidas':'饮料','Postres':'甜点' };
+
+// ── State ─────────────────────────────────────────────────────
+const state = {
+  register: 'Caja 01',
+  cashier: '',
+  turnType: 'Mañana',
+  activeCat: 'Todos',
+  query: '',
+  cart: [],
+};
+
+// ── Helpers ───────────────────────────────────────────────────
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+const fmt = (n) => `$${n.toFixed(2)}`;
+
+// ── Date ──────────────────────────────────────────────────────
+function renderDate() {
+  $('#todayDate').textContent = new Date().toLocaleDateString('es-CO', {
+    weekday:'short', day:'numeric', month:'short'
+  });
+}
+
+// ── Order ID ──────────────────────────────────────────────────
+function generateOrderId() {
+  const days = ['D','L','M','X','J','V','S'];
+  const day = days[new Date().getDay()];
+  const today = new Date().toDateString();
+  let data = JSON.parse(localStorage.getItem('tr_counter') || 'null') || { date: today, count: 0 };
+  if (data.date !== today) data = { date: today, count: 0 };
+  data.count++;
+  localStorage.setItem('tr_counter', JSON.stringify(data));
+  return `${day}-${String(data.count).padStart(4,'0')}`;
+}
+
+// ── Stepper ───────────────────────────────────────────────────
+function setStepper(activeStep) {
+  $$('.step').forEach(el => {
+    const n = parseInt(el.dataset.step);
+    el.classList.remove('active','done');
+    const bullet = el.querySelector('.step-bullet');
+    if (n < activeStep) {
+      el.classList.add('done');
+      bullet.textContent = '✓';
+    } else if (n === activeStep) {
+      el.classList.add('active');
+      bullet.textContent = n;
+    } else {
+      bullet.textContent = n;
+    }
+  });
+  $('#line-1-2').classList.toggle('done', activeStep > 1);
+  $('#line-2-3').classList.toggle('done', activeStep > 2);
+}
+
+// ── Views ─────────────────────────────────────────────────────
+function showView(id) {
+  $$('.view').forEach(v => v.classList.remove('active'));
+  const v = document.getElementById('view-' + id);
+  v.classList.add('active');
+}
+
+// ── Shift form ────────────────────────────────────────────────
+function initShiftForm() {
+  const cashierEl = $('#cashier');
+  const btn = $('#openShiftBtn');
+  const registerEl = $('#register');
+  const turnEl = $('#turnType');
+
+  const check = () => { btn.disabled = !cashierEl.value.trim(); };
+  cashierEl.addEventListener('input', e => { state.cashier = e.target.value; check(); });
+  registerEl.addEventListener('change', e => { state.register = e.target.value; });
+  turnEl.addEventListener('change', e => { state.turnType = e.target.value; });
+}
+
+function openShift(e) {
+  e.preventDefault();
+  if (!state.cashier.trim()) return;
+
+  // Spin food illustration out
+  const img = $('#foodImage');
+  const glow = $('#glowCircle');
+  img.classList.add('spin-out');
+  glow.style.opacity = '0';
+
+  const btn = $('#openShiftBtn');
+  btn.disabled = true;
+  btn.textContent = '开始…';
+
+  setTimeout(() => {
+    // Save shift data
+    localStorage.setItem('tr_shift', JSON.stringify({
+      cashier: state.cashier,
+      register: state.register,
+      turnType: state.turnType,
+      openedAt: new Date().toISOString()
+    }));
+
+    $('#shiftChip').textContent = `${state.register} · ${state.cashier}`;
+    setStepper(2);
+    renderCategories();
+    renderProducts();
+    renderCart();
+    showView('productos');
+  }, 600);
+}
+
+// ── Categories ────────────────────────────────────────────────
+function renderCategories() {
+  const wrap = $('#categories');
+  wrap.innerHTML = '';
+  CATS.forEach(c => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cat-btn' + (c === state.activeCat ? ' active' : '');
+    btn.textContent = c;
+    btn.addEventListener('click', () => {
+      state.activeCat = c;
+      renderCategories();
+      renderProducts();
+    });
+    btn.addEventListener('mouseenter', () => { btn.textContent = CAT_CN[c] || c; });
+    btn.addEventListener('mouseleave', () => { btn.textContent = c; });
+    wrap.appendChild(btn);
+  });
+}
+
+// ── Products ──────────────────────────────────────────────────
+function renderProducts() {
+  const q = state.query.toLowerCase();
+  const filtered = PRODUCTS.filter(p => {
+    const inCat = state.activeCat === 'Todos' || p.cat === state.activeCat;
+    const inQ = !q || p.name.toLowerCase().includes(q) || p.cn.includes(q) || p.cat.toLowerCase().includes(q);
+    return inCat && inQ;
+  });
+
+  const grid = $('#productGrid');
+  grid.innerHTML = '';
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><span class="empty-cn">空</span><p class="muted-sm">Sin resultados</p></div>`;
+    return;
+  }
+
+  filtered.forEach(p => {
+    const card = document.createElement('article');
+    card.className = 'product-card';
+    card.innerHTML = `
+      <div class="product-card__cn">${p.cn}</div>
+      <div class="product-card__name">${p.name}</div>
+      <div class="product-card__cat">${p.cat}</div>
+      <div class="product-card__footer">
+        <span class="product-card__price">${fmt(p.price)}</span>
+        <div class="product-card__add">+</div>
+      </div>
+    `;
+    card.addEventListener('click', () => addToCart(p));
+    grid.appendChild(card);
+  });
+}
+
+// ── Cart ──────────────────────────────────────────────────────
+function addToCart(p) {
+  const existing = state.cart.find(i => i.id === p.id);
+  if (existing) existing.qty++;
+  else state.cart.push({ ...p, qty: 1 });
+  renderCart();
+  // Pulse badge
+  const badge = $('#cartCountBadge');
+  badge.style.transform = 'scale(1.4)';
+  setTimeout(() => badge.style.transform = '', 200);
+}
+
+function removeFromCart(id) {
+  state.cart = state.cart.filter(i => i.id !== id);
+  renderCart();
+}
+
+function changeQty(id, delta) {
+  const item = state.cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) return removeFromCart(id);
+  renderCart();
+}
+
+function renderCart() {
+  const list = $('#cartList');
+  const empty = $('#cartEmpty');
+  const countEl = $('#cartCount');
+  const badgeEl = $('#cartCountBadge');
+  const goBtn = $('#goCheckout');
+
+  const totalItems = state.cart.reduce((s, i) => s + i.qty, 0);
+  countEl.textContent = totalItems;
+  badgeEl.textContent = totalItems;
+
+  if (!state.cart.length) {
+    empty.style.display = '';
+    list.hidden = true;
+    goBtn.disabled = true;
+    $('#subtotal').textContent = '$0.00';
+    $('#tax').textContent = '$0.00';
+    $('#total').textContent = '$0.00';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.hidden = false;
+  list.innerHTML = '';
+  goBtn.disabled = false;
+
+  let subtotal = 0;
+  state.cart.forEach(i => {
+    subtotal += i.price * i.qty;
+    const li = document.createElement('li');
+    li.className = 'cart-item';
+    li.innerHTML = `
+      <div class="cart-item__info">
+        <div class="cart-item__name">${i.name}</div>
+        <div class="cart-item__meta">${fmt(i.price)} c/u</div>
+      </div>
+      <div class="qty-control">
+        <button class="qty-btn" data-id="${i.id}" data-delta="-1">−</button>
+        <span class="qty-value">${i.qty}</span>
+        <button class="qty-btn" data-id="${i.id}" data-delta="1">+</button>
+      </div>
+      <span class="cart-item__remove" data-remove="${i.id}" title="Eliminar">✕</span>
+    `;
+    list.appendChild(li);
+  });
+
+  // Bind qty buttons & remove
+  list.querySelectorAll('.qty-btn').forEach(btn => {
+    btn.addEventListener('click', () => changeQty(btn.dataset.id, parseInt(btn.dataset.delta)));
+  });
+  list.querySelectorAll('.cart-item__remove').forEach(btn => {
+    btn.addEventListener('click', () => removeFromCart(btn.dataset.remove));
+  });
+
+  const tax = subtotal * 0.10;
+  const total = subtotal + tax;
+  $('#subtotal').textContent = fmt(subtotal);
+  $('#tax').textContent = fmt(tax);
+  $('#total').textContent = fmt(total);
+}
+
+// ── Checkout ──────────────────────────────────────────────────
+function initCheckout() {
+  $('#goCheckout').addEventListener('click', () => {
+    if (!state.cart.length) return;
+    const orderId = generateOrderId();
+    const orderData = {
+      id: orderId,
+      items: state.cart,
+      register: state.register,
+      cashier: state.cashier,
+      turnType: state.turnType,
+      time: new Date().toISOString()
+    };
+    localStorage.setItem('tr_order', JSON.stringify(orderData));
+    window.location.href = 'caja.html';
+  });
+}
+
+// ── Search ────────────────────────────────────────────────────
+function initSearch() {
+  $('#searchInput').addEventListener('input', e => {
+    state.query = e.target.value;
+    renderProducts();
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────
+function init() {
+  renderDate();
+  setStepper(1);
+  initShiftForm();
+  initSearch();
+  initCheckout();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
