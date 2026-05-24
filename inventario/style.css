@@ -142,6 +142,7 @@ nav a {
   transition: var(--transition);
   font-family: var(--font-ui);
   min-height: 44px;
+  text-decoration: none;
 }
 
 nav a:hover {
@@ -157,25 +158,18 @@ nav a.active {
 
 .logout {
   margin-top: auto;
-  padding: .75rem 1rem;
-  border-radius: 12px;
-  background: rgba(255,255,255,.1);
-  color: rgba(255,255,255,.85);
-  font-size: .875rem;
-  font-weight: 600;
-  font-family: var(--font-ui);
-  transition: var(--transition);
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  flex-shrink: 0;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: background 0.2s;
 }
 
 .logout:hover {
-  background: rgba(255,255,255,.2);
-  color: white;
+ background: rgba(255,255,255,0.2);
 }
 
 .content {
@@ -438,7 +432,7 @@ textarea:focus {
   background: var(--red-hover);
 }
 
-.toast {\n  position: fixed;\n  bottom: 2rem;\n  right: 2rem;\n  background: var(--ink);\n  color: white;\n  padding: 1rem 1.5rem;\n  border-radius: var(--radius);\n  box-shadow: var(--shadow-lg);\n  opacity: 0;\n  transform: translateY(100px);\n  transition: all .3s;\n  z-index: 1000;\n  font-family: var(--font-body);\n  font-size: .9rem;\n}\n\n.toast.show {\n  opacity: 1;\n  transform: translateY(0);\n}\n\n.kanji-decorative {\n  font-family: var(--font-display);\n  pointer-events: none;\n  user-select: none;\n}\n\n.decor-rotate {\n  position: fixed;\n  bottom: 2rem;\n  right: 2rem;\n  width: 120px;\n  height: 120px;\n  opacity: 0.05;\n  animation: rotate 20s linear infinite;\n  pointer-events: none;\n  z-index: 0;\n}\n\n@keyframes rotate {\n  from { transform: rotate(0deg); }\n  to { transform: rotate(360deg); }\n}\n\n@media (max-width: 768px) {\n  .sidebar {\n    position: fixed;\n    left: 0;\n    top: 0;\n    width: 250px;\n    height: 100vh;\n    z-index: 100;\n  }\n\n  .content {\n    margin-left: 0;\n    width: 100%;\n  }\n\n  .header {\n    flex-direction: column;\n    gap: 1rem;\n  }\n\n  .filters {\n    flex-direction: column;\n    align-items: stretch;\n  }\n\n  #search {\n    min-width: 100%;\n  }\n\n  .tabs {\n    flex-wrap: wrap;\n  }\n\n  table {\n    font-size: .85rem;\n  }\n\n  tbody td {\n    padding: .75rem;\n  }\n}
+
 
 /* ================= DECORATIVES ================= */
 

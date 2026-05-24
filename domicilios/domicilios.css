@@ -432,8 +432,8 @@ h1 {
 }
 
 .entregado {
-  background: #c8e6c9;
-  color: #4caf50;
+  background: rgb(255, 152, 111);
+  color: #b41800;
 }
 
 .card-client strong {
@@ -489,30 +489,30 @@ h1 {
 }
 
 .btn-back {
-  background: #fff3e0;
-  color: #ff8c42;
+  background: #b41800;
+  color: #ffffff;
 }
 
 .btn-back:hover {
-  background: #ffe0b2;
+  background: #c72f17;
 }
 
 .btn-forward {
-  background: #e8f5e9;
-  color: #4caf50;
+  background: #b41800;
+  color: #ffffff;
 }
 
 .btn-forward:hover {
-  background: #c8e6c9;
+  background: #c72f17;
 }
 
 .btn-delete {
-  background: #ffebee;
-  color: var(--red);
+  background: #b41800;
+  color: #ffffff;
 }
 
 .btn-delete:hover {
-  background: #ffcdd2;
+  background: #770000;
 }
 
 /* NO RESULTS */
@@ -542,12 +542,33 @@ h1 {
 
 .modal {
   background: white;
-  border-radius: var(--radius-xl);
   padding: 1.875rem;
-  width: 90%;
-  max-width: 480px;
+  width: 100%;
+  max-width: 500px;
   animation: slideUp 0.3s;
   box-shadow: var(--shadow-lg);
+ justify-content: center;
+ display: flex;
+  flex-direction: column;
+  text-align: center;
+  
+}
+
+.modal label{
+  display: block;
+}
+
+.btn-black{
+  background-color: #686868;
+  color: white;
+  cursor: default;
+}
+
+.modal input{
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: solid 2px #770000;
 }
 
 .modal-header h2 {
@@ -591,6 +612,9 @@ h1 {
 .btn-submit:hover {
   background: var(--red-hover);
 }
+
+
+
 
 /* ANIMATIONS */
 @keyframes fadeIn {
